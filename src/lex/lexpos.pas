@@ -1,17 +1,13 @@
 {
-  Construct the position table, as well as first position sets.
-
-  The position table stores symbol positions in regular expressions of
-  the Lex grammar. It also allows to store the corresponding first
-  and follow sets. By this means, the position table represents an eps-
-  free nondeterministic automaton for the regular expressions of the
-  Lex grammar (cf. Aho/Sethi/Ullman, Compilers : Principles, Techniques
-  and Tools, 1986, Section 3.9, on constructing NFA's from regular
-  expressions using position tables).
-
+  Delphi Yacc & Lex
+  Copyright (c) 2003 by Michiel Rook
+  Based on Turbo Pascal Lex and Yacc Version 4.1
 
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
+  Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
+  
+  ## $Id: lexpos.pas,v 1.3 2003/12/18 21:01:02 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,20 +22,7 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-
-$Revision: 1.2 $
-$Modtime: 96-08-01 6:30 $
-
-$History: LEXPOS.PAS $
- * 
- * *****************  Version 2  *****************
- * User: Berend       Date: 96-10-10   Time: 21:16
- * Updated in $/Lex and Yacc/tply
- * Updated for protected mode, windows and Delphi 1.X and 2.X.
-
 }
-
 
 unit lexpos;
 

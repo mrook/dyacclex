@@ -1,15 +1,13 @@
 {
-  Parser for Lex grammar rules.
-
-  This module implements a parser for Lex grammar rules. It should
-  probably be reimplemented using Lex and Yacc, but the irregular
-  lexical structure of the Lex language makes that rather tedious,
-  so I decided to use a conventional recursive-descent-parser
-  instead.
-
+  Delphi Yacc & Lex
+  Copyright (c) 2003 by Michiel Rook
+  Based on Turbo Pascal Lex and Yacc Version 4.1
 
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
+  Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
+  
+  ## $Id: lexrules.pas,v 1.3 2003/12/18 21:01:02 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,20 +22,7 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-
-$Revision: 1.2 $
-$Modtime: 96-08-01 6:30 $
-
-$History: LEXRULES.PAS $
- * 
- * *****************  Version 2  *****************
- * User: Berend       Date: 96-10-10   Time: 21:16
- * Updated in $/Lex and Yacc/tply
- * Updated for protected mode, windows and Delphi 1.X and 2.X.
-
 }
-
 
 unit lexrules;
 

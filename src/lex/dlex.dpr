@@ -1,12 +1,13 @@
 {
-	Delphi Yacc & Lex
-	Copyright (c) 2003 by Michiel Rook
+  Delphi Yacc & Lex
+  Copyright (c) 2003 by Michiel Rook
   Based on Turbo Pascal Lex and Yacc Version 4.1
 
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
+  Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  $Id: dlex.dpr,v 1.3 2003/12/18 19:36:54 druid Exp $
+  ## $Id: dlex.dpr,v 1.4 2003/12/18 21:01:01 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-}  
+}
 
 {$I-}
 program dlex;

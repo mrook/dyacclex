@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: dyacc.dpr,v 1.3 2003/12/18 19:36:54 druid Exp $
+  ## $Id: dyacc.dpr,v 1.4 2003/12/18 21:01:03 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,11 +23,6 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 }
-
-
-{$IFDEF Windows}
-{$M 32768,0}
-{$ENDIF}
 
 program dyacc;
 {$APPTYPE CONSOLE}

@@ -1,8 +1,8 @@
 #
-# Delphi Yacc & Lex
+# Delphi Yacc & Lex - Parser generator toolset for Delphi and Kylix
 # Copyright (c) 2003 by Michiel Rook
 # Based on Turbo Pascal Lex and Yacc Version 4.1
-# Compiler generator toolset for Turbo/Borland/Free Pascal and Delphi
+#
 #
 # Copyright (c) 1990-2000 by Albert Graef
 #                       <ag@muwiinfa.geschichte.uni-mainz.de>
@@ -13,7 +13,7 @@
 #
 # Main Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.1 2003/12/18 17:55:09 druid Exp $
+# $Id: Makefile,v 1.2 2003/12/18 21:01:45 druid Exp $
 #
 
 
