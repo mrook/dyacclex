@@ -8,7 +8,7 @@
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   Copyright (c) 2004     Morris Johns, Christchurch, NZ.
   
-  ## $Id: dyacc.dpr,v 1.8 2004/08/17 20:25:20 druid Exp $
+  ## $Id$
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -62,6 +62,8 @@ const PP = 270;
 const LCURL = 271;
 const RCURL = 272;
 const ILLEGAL = 273;
+type YYSType = Integer(*YYSType*);
+// source: yyparse.cod line# 2
 
 var yylval : YYSType;
 
@@ -89,343 +91,412 @@ var
 
 procedure yyaction ( yyruleno : Integer );
   (* local definitions: *)
+// source: yyparse.cod line# 30
 begin
   (* actions: *)
   case yyruleno of
-   1 : begin
+1 : begin
          yyval := yyv[yysp-0];
        end;
-   2 : begin
+2 : begin
          yyval := yyv[yysp-0];
        end;
-   3 : begin
+3 : begin
          yyval := yyv[yysp-0];
        end;
-   4 : begin
+4 : begin
          yyval := yyv[yysp-0];
        end;
-   5 : begin
+5 : begin
          yyval := yyv[yysp-0];
        end;
-   6 : begin
+6 : begin
+         // source: dyacc.y line#80
          yyerrok; 
        end;
-   7 : begin
+7 : begin
+         // source: dyacc.y line#81
          yyerrok; 
        end;
-   8 : begin
+8 : begin
+         // source: dyacc.y line#82
          yyerrok; 
        end;
-   9 : begin
+9 : begin
+         // source: dyacc.y line#83
          yyerrok; 
        end;
-  10 : begin
+10 : begin
+         // source: dyacc.y line#84
          yyerrok; 
        end;
-  11 : begin
+11 : begin
+         // source: dyacc.y line#85
          yyerrok; 
        end;
-  12 : begin
+12 : begin
+         // source: dyacc.y line#86
          yyerrok; 
        end;
-  13 : begin
+13 : begin
          yyval := yyv[yysp-0];
        end;
-  14 : begin
+14 : begin
+         // source: dyacc.y line#88
          yyerrok; 
        end;
-  15 : begin
+15 : begin
          yyval := yyv[yysp-0];
        end;
-  16 : begin
+16 : begin
          yyval := yyv[yysp-0];
        end;
-  17 : begin
+17 : begin
+         // source: dyacc.y line#91
          error(rcurl_expected); 
        end;
-  18 : begin
+18 : begin
          yyval := yyv[yysp-0];
        end;
-  19 : begin
+19 : begin
+         // source: dyacc.y line#93
          yyerrok; 
        end;
-  20 : begin
+20 : begin
+         // source: dyacc.y line#94
          yyerrok; 
        end;
-  21 : begin
+21 : begin
+         // source: dyacc.y line#95
          yyerrok; 
        end;
-  22 : begin
+22 : begin
          yyval := yyv[yysp-0];
        end;
-  23 : begin
+23 : begin
          yyval := yyv[yysp-0];
        end;
-  24 : begin
+24 : begin
+         // source: dyacc.y line#98
          error(rbrace_expected); 
        end;
-  25 : begin
+25 : begin
          yyval := yyv[yysp-0];
        end;
-  26 : begin
+26 : begin
          yyval := yyv[yysp-0];
        end;
-  27 : begin
+27 : begin
+         // source: dyacc.y line#101
          error(rangle_expected); 
        end;
-  28 : begin
+28 : begin
          yyval := yyv[yysp-0];
        end;
-  29 : begin
+29 : begin
+         // source: dyacc.y line#107
          sort_types;
          definitions;
          next_section; 
        end;
-  30 : begin
+30 : begin
+         // source: dyacc.y line#111
          next_section;
          generate_parser;
          next_section; 
        end;
-  31 : begin
+31 : begin
          yyval := yyv[yysp-5];
        end;
-  32 : begin
+32 : begin
        end;
-  33 : begin
+33 : begin
+         // source: dyacc.y line#119
          copy_rest_of_file; 
        end;
-  34 : begin
+34 : begin
        end;
-  35 : begin
+35 : begin
+         // source: dyacc.y line#125
          yyerrok; 
        end;
-  36 : begin
+36 : begin
+         // source: dyacc.y line#126
          error(error_in_def); 
        end;
-  37 : begin
+37 : begin
+         // source: dyacc.y line#130
          startnt := ntsym(yyv[yysp-0]); 
        end;
-  38 : begin
+38 : begin
+         // source: dyacc.y line#132
          error(ident_expected); 
        end;
-  39 : begin
+39 : begin
+         // source: dyacc.y line#133
          copy_code; 
        end;
-  40 : begin
+40 : begin
          yyval := yyv[yysp-2];
        end;
-  41 : begin
+41 : begin
+         // source: dyacc.y line#136
          act_prec := 0; 
        end;
-  42 : begin
+42 : begin
          yyval := yyv[yysp-3];
        end;
-  43 : begin
+43 : begin
+         // source: dyacc.y line#139
          copy_union_code; 
        end;
-  44 : begin
+44 : begin
          yyval := yyv[yysp-2];
        end;
-  45 : begin
+45 : begin
+         // source: dyacc.y line#142
          act_prec := new_prec_level(left); 
        end;
-  46 : begin
+46 : begin
          yyval := yyv[yysp-3];
        end;
-  47 : begin
+47 : begin
+         // source: dyacc.y line#146
          act_prec := new_prec_level(right); 
        end;
-  48 : begin
+48 : begin
          yyval := yyv[yysp-3];
        end;
-  49 : begin
+49 : begin
+         // source: dyacc.y line#150
          act_prec := new_prec_level(nonassoc); 
        end;
-  50 : begin
+50 : begin
          yyval := yyv[yysp-3];
        end;
-  51 : begin
+51 : begin
          yyval := yyv[yysp-2];
        end;
-  52 : begin
+52 : begin
          yyval := yyv[yysp-1];
        end;
-  53 : begin
+53 : begin
+         // source: dyacc.y line#160
          act_type := 0; 
        end;
-  54 : begin
+54 : begin
+         // source: dyacc.y line#162
          act_type := yyv[yysp-1]; add_type(yyv[yysp-1]); 
        end;
-  55 : begin
+55 : begin
          yyval := yyv[yysp-0];
        end;
-  56 : begin
+56 : begin
+         // source: dyacc.y line#168
          yyerrok; 
        end;
-  57 : begin
+57 : begin
+         // source: dyacc.y line#170
          yyerrok; 
        end;
-  58 : begin
+58 : begin
+         // source: dyacc.y line#172
          error(ident_expected); 
        end;
-  59 : begin
+59 : begin
+         // source: dyacc.y line#174
          error(error_in_def); 
        end;
-  60 : begin
+60 : begin
+         // source: dyacc.y line#176
          error(ident_expected); 
        end;
-  61 : begin
+61 : begin
+         // source: dyacc.y line#180
          if act_type<>0 then
          sym_type^[yyv[yysp-0]] := act_type;
          if act_prec<>0 then
          sym_prec^[yyv[yysp-0]] := act_prec; 
        end;
-  62 : begin
+62 : begin
+         // source: dyacc.y line#185
          litsym(yyv[yysp-0], 0);
          if act_type<>0 then
          sym_type^[litsym(yyv[yysp-0], 0)] := act_type;
          if act_prec<>0 then
          sym_prec^[litsym(yyv[yysp-0], 0)] := act_prec; 
        end;
-  63 : begin
+63 : begin
+         // source: dyacc.y line#191
          litsym(yyv[yysp-0], 0);
          if act_type<>0 then
          sym_type^[litsym(yyv[yysp-0], 0)] := act_type;
          if act_prec<>0 then
          sym_prec^[litsym(yyv[yysp-0], 0)] := act_prec; 
        end;
-  64 : begin
+64 : begin
+         // source: dyacc.y line#197
          litsym(yyv[yysp-1], 0);
          if act_type<>0 then
          sym_type^[litsym(yyv[yysp-1], yyv[yysp-0])] := act_type;
          if act_prec<>0 then
          sym_prec^[litsym(yyv[yysp-1], 0)]  := act_prec; 
        end;
-  65 : begin
+65 : begin
+         // source: dyacc.y line#203
          litsym(yyv[yysp-1], 0);
          if act_type<>0 then
          sym_type^[litsym(yyv[yysp-1], yyv[yysp-0])] := act_type;
          if act_prec<>0 then
          sym_prec^[litsym(yyv[yysp-1], 0)]  := act_prec; 
        end;
-  66 : begin
+66 : begin
          yyval := yyv[yysp-0];
        end;
-  67 : begin
+67 : begin
+         // source: dyacc.y line#212
          yyerrok; 
        end;
-  68 : begin
+68 : begin
+         // source: dyacc.y line#214
          yyerrok; 
        end;
-  69 : begin
+69 : begin
+         // source: dyacc.y line#216
          error(ident_expected); 
        end;
-  70 : begin
+70 : begin
+         // source: dyacc.y line#218
          error(error_in_def); 
        end;
-  71 : begin
+71 : begin
+         // source: dyacc.y line#220
          error(ident_expected); 
        end;
-  72 : begin
+72 : begin
+         // source: dyacc.y line#224
          if act_type<>0 then
          sym_type^[ntsym(yyv[yysp-0])] := act_type; 
        end;
-  73 : begin
+73 : begin
+         // source: dyacc.y line#229
          next_section; 
        end;
-  74 : begin
+74 : begin
          yyval := yyv[yysp-1];
        end;
-  75 : begin
+75 : begin
+         // source: dyacc.y line#232
          copy_code; 
        end;
-  76 : begin
+76 : begin
+         // source: dyacc.y line#233
          next_section; 
        end;
-  77 : begin
+77 : begin
          yyval := yyv[yysp-4];
        end;
-  78 : begin
+78 : begin
+         // source: dyacc.y line#239
          yyerrok; 
        end;
-  79 : begin
+79 : begin
+         // source: dyacc.y line#241
          error(error_in_rule); 
        end;
-  80 : begin
+80 : begin
+         // source: dyacc.y line#243
          error(error_in_rule); 
        end;
-  81 : begin
+81 : begin
+         // source: dyacc.y line#247
          start_rule(ntsym(yyv[yysp-0])); 
        end;
-  82 : begin
+82 : begin
+         // source: dyacc.y line#249
          start_body; 
        end;
-  83 : begin
+83 : begin
+         // source: dyacc.y line#251
          end_body; 
        end;
-  84 : begin
+84 : begin
          yyval := yyv[yysp-0];
        end;
-  85 : begin
+85 : begin
+         // source: dyacc.y line#257
          start_body; 
        end;
-  86 : begin
+86 : begin
+         // source: dyacc.y line#259
          end_body; 
        end;
-  87 : begin
+87 : begin
        end;
-  88 : begin
+88 : begin
+         // source: dyacc.y line#265
          add_symbol(yyv[yysp-0]); yyerrok; 
        end;
-  89 : begin
+89 : begin
+         // source: dyacc.y line#267
          add_symbol(sym(yyv[yysp-0])); yyerrok; 
        end;
-  90 : begin
+90 : begin
+         // source: dyacc.y line#269
          add_symbol(sym(yyv[yysp-0])); yyerrok; 
        end;
-  91 : begin
+91 : begin
+         // source: dyacc.y line#271
          add_action; yyerrok; 
        end;
-  92 : begin
+92 : begin
+         // source: dyacc.y line#273
          error(error_in_rule); 
        end;
-  93 : begin
+93 : begin
+         // source: dyacc.y line#276
          copy_action; 
        end;
-  94 : begin
+94 : begin
          yyval := yyv[yysp-2];
        end;
-  95 : begin
+95 : begin
+         // source: dyacc.y line#278
          copy_single_action; 
        end;
-  96 : begin
+96 : begin
        end;
-  97 : begin
+97 : begin
+         // source: dyacc.y line#286
          add_rule_prec(yyv[yysp-0]); 
        end;
-  98 : begin
+98 : begin
          yyval := yyv[yysp-3];
        end;
-  99 : begin
+99 : begin
+         // source: dyacc.y line#290
          add_rule_prec(litsym(yyv[yysp-0], 0)); 
        end;
- 100 : begin
+100 : begin
          yyval := yyv[yysp-3];
        end;
- 101 : begin
+101 : begin
+         // source: dyacc.y line#294
          add_rule_prec(litsym(yyv[yysp-0], 0)); 
        end;
- 102 : begin
+102 : begin
          yyval := yyv[yysp-3];
        end;
- 103 : begin
+103 : begin
          yyval := yyv[yysp-1];
        end;
- 104 : begin
+104 : begin
        end;
- 105 : begin
+105 : begin
+         // source: dyacc.y line#304
          add_action; 
        end;
+// source: yyparse.cod line# 34
   end;
 end(*yyaction*);
 
@@ -444,6 +515,7 @@ yynacts   = 262;
 yyngotos  = 148;
 yynstates = 132;
 yynrules  = 105;
+yymaxtoken = 273;
 
 yya : array [1..yynacts] of YYARec = (
 { 0: }
@@ -1908,6 +1980,7 @@ yyr : array [1..yynrules] of YYRRec = (
 { 105: } ( len: 1; sym: -57 )
 );
 
+// source: yyparse.cod line# 39
 
 const _error = 256; (* error token *)
 
@@ -2415,8 +2488,41 @@ var
   readonlyflag : Boolean;
   Attrs : Integer;
 
+procedure openCodFile();
 begin
-  codfilepath := ExtractFilePath(paramstr(0));
+  (* search code template in /usr/share/dyacclex/ (on linux),
+     then current directory, then on path where Lex
+     was executed from: *)
+
+  codfilepath := ExtractFilePath(ParamStr(0));
+
+  {$IFDEF LINUX}
+  codfilename := '/usr/share/dyacclex/yyparse.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+  {$ENDIF}
+
+  codfilename := 'yyparse.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+
+  codfilename := codfilepath + 'yyparse.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+
+  fatal(cannot_open_file + 'yyparse.cod');
+end;
+
+begin
   readonlyflag := False;
 
   (* sign-on: *)
@@ -2488,18 +2594,7 @@ begin
   rewrite(yyout); if ioresult<>0 then fatal(cannot_open_file+pasfilename);
   rewrite(yylst); if ioresult<>0 then fatal(cannot_open_file+lstfilename);
 
-  (* search code template in current directory, then on path where Yacc
-     was executed from: *)
-  codfilename := 'yyparse.cod';
-  assign(yycod, codfilename);
-  reset(yycod);
-  if ioresult<>0 then
-    begin
-      codfilename := codfilepath+'yyparse.cod';
-      assign(yycod, codfilename);
-      reset(yycod);
-      if ioresult<>0 then fatal(cannot_open_file+codfilename);
-    end;
+  openCodFile();
 
   (* parse source grammar: *)
 

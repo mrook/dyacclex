@@ -8,7 +8,7 @@
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   Copyright (c) 2004     Morris Johns, Christchurch, NZ.
   
-  ## $Id: dyacc.y,v 1.6 2004/08/17 20:25:20 druid Exp $
+  ## $Id$
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -620,8 +620,41 @@ var
   readonlyflag : Boolean;
   Attrs : Integer;
 
+procedure openCodFile();
 begin
-  codfilepath := ExtractFilePath(paramstr(0));
+  (* search code template in /usr/share/dyacclex/ (on linux),
+     then current directory, then on path where Lex
+     was executed from: *)
+
+  codfilepath := ExtractFilePath(ParamStr(0));
+
+  {$IFDEF LINUX}
+  codfilename := '/usr/share/dyacclex/yyparse.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+  {$ENDIF}
+
+  codfilename := 'yyparse.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+
+  codfilename := codfilepath + 'yyparse.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+
+  fatal(cannot_open_file + 'yyparse.cod');
+end;
+
+begin
   readonlyflag := False;
 
   (* sign-on: *)
@@ -693,18 +726,7 @@ begin
   rewrite(yyout); if ioresult<>0 then fatal(cannot_open_file+pasfilename);
   rewrite(yylst); if ioresult<>0 then fatal(cannot_open_file+lstfilename);
 
-  (* search code template in current directory, then on path where Yacc
-     was executed from: *)
-  codfilename := 'yyparse.cod';
-  assign(yycod, codfilename);
-  reset(yycod);
-  if ioresult<>0 then
-    begin
-      codfilename := codfilepath+'yyparse.cod';
-      assign(yycod, codfilename);
-      reset(yycod);
-      if ioresult<>0 then fatal(cannot_open_file+codfilename);
-    end;
+  openCodFile();
 
   (* parse source grammar: *)
 

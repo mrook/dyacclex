@@ -8,7 +8,7 @@
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   Copyright (c) 2004     Morris Johns, Christchurch, NZ.
   
-  ## $Id: dlex.dpr,v 1.7 2004/08/17 20:07:24 druid Exp $
+  ## $Id$
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -606,9 +606,41 @@ var
   i:     integer;
   Attrs: integer;
 
+procedure openCodFile();
 begin
+  (* search code template in /usr/share/dyacclex/ (on linux),
+     then current directory, then on path where Lex
+     was executed from: *)
+
   codfilepath := ExtractFilePath(ParamStr(0));
 
+  {$IFDEF LINUX}
+  codfilename := '/usr/share/dyacclex/yylex.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+  {$ENDIF}
+
+  codfilename := 'yylex.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+
+  if (IOResult = 0) then
+    exit;
+
+  codfilename := codfilepath + 'yylex.cod';
+  Assign(yycod, codfilename);
+  reset(yycod);
+      
+  if (IOResult = 0) then
+    exit;
+    
+  fatal(cannot_open_file + 'yylex.cod');
+end;
+
+begin
   (* sign-on: *)
 
   writeln(sign_on);
@@ -684,20 +716,8 @@ begin
   rewrite(yylst);
   if ioresult <> 0 then
     fatal(cannot_open_file + lstfilename);
-
-  (* search code template in current directory, then on path where Lex
-     was executed from: *)
-  codfilename := 'yylex.cod';
-  Assign(yycod, codfilename);
-  reset(yycod);
-  if ioresult <> 0 then
-  begin
-    codfilename := codfilepath + 'yylex.cod';
-    Assign(yycod, codfilename);
-    reset(yycod);
-    if ioresult <> 0 then
-      fatal(cannot_open_file + codfilename);
-  end;
+    
+  openCodFile();
 
   (* parse source grammar: *)
 
