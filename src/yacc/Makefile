@@ -13,7 +13,7 @@
 #
 # Sources Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.3 2004/02/24 14:17:57 druid Exp $
+# $Id$
 #
 
 
@@ -40,7 +40,7 @@ endif
 
 
 ifdef LINUX
-DCC=dcc
+DCC=/usr/local/bin/dcc
 
 YACC=./dyacc
 RM=rm -f
