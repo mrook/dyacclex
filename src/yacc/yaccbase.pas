@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yaccbase.pas,v 1.3 2003/12/18 21:01:03 druid Exp $
+  ## $Id: yaccbase.pas,v 1.4 2004/02/23 20:44:36 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,56 +30,42 @@ unit yaccbase;
 
 interface
 
-const
 
 (* symbolic character constants: *)
+const
+	bs   = #8;	(* backspace character *)
+	tab  = #9;	(* tab character *)
+	nl   = #10;	(* newline character *)
+	cr   = #13;	(* carriage return *)
+	ff   = #12;	(* form feed character *)
 
-bs   = #8;	(* backspace character *)
-tab  = #9;	(* tab character *)
-nl   = #10;	(* newline character *)
-cr   = #13;	(* carriage return *)
-ff   = #12;	(* form feed character *)
+	max_elems  = 75; (* maximum size of integer sets *)
 
 var
-
-(* Filenames: *)
-
-yfilename     : String;
-pasfilename   : String;
-lstfilename   : String;
-codfilename   : String;
-codfilepath   : String; { Under Linux, 
-                          binary and conf file are never in 1 directory.}
+	(* Filenames: *)
+	yfilename     : String;
+	pasfilename   : String;
+	lstfilename   : String;
+	codfilename   : String;
+	codfilepath   : String; { Under Linux, 
+														binary and conf file are never in 1 directory.}
                           
-(* Yacc input, output, list and code template file: *)
+	(* Yacc input, output, list and code template file: *)
+	yyin, yyout, yylst, yycod : Text;
 
-yyin, yyout, yylst, yycod : Text;
-
-(* the following values are initialized and updated by the parser: *)
-
-line      : String;  (* current input line *)
-lno, cno  : Integer; (* current input position (line/column) *)
-tokleng   : Integer; (* length of current token *)
-
-const
-
-{$IFDEF MsDos}
-max_elems  = 50;  (* maximum size of integer sets *)
-{$ELSE}
-max_elems  = 75; (* maximum size of integer sets *)
-{$ENDIF}
+	(* the following values are initialized and updated by the parser: *)
+	line      : String;  (* current input line *)
+	lno, cno  : Integer; (* current input position (line/column) *)
+	tokleng   : Integer; (* length of current token *)
 
 type
+	(* String pointers: *)
+	StrPtr    = PString;
 
-(* String pointers: *)
-
-StrPtr    = ^String;
-
-(* Sorted integer sets: *)
-
-IntSet    = array [0..max_elems] of Integer;
+	(* Sorted integer sets: *)
+	IntSet    = array [0..max_elems] of Integer;
               (* word 0 is size *)
-IntSetPtr = ^IntSet;
+	IntSetPtr = ^IntSet;
 
 (* Operations: *)
 
@@ -216,16 +202,14 @@ function doubleQuoteStr(str : String) : String;
 implementation
 
 uses 
-	yaccmsgs;
+	yaccmsgs, SysUtils;
 
 (* String pointers: *)
 
 function newStr(str : String) : StrPtr;
   var strp : StrPtr;
   begin
-    getmem(strp, succ(length(str)));
-    move(str, strp^, succ(length(str)));
-    newStr := strp;
+    newStr := SysUtils.NewStr(str);
   end(*newStr*);
 
 (* Integer sets: *)

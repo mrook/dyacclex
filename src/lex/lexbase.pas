@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexbase.pas,v 1.3 2003/12/18 21:01:02 druid Exp $
+  ## $Id: lexbase.pas,v 1.4 2004/02/23 20:44:36 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,84 +29,70 @@ unit lexbase;
 interface
 
 
-const
-
 (* symbolic character constants: *)
+const
+	bs   = #8;	(* backspace character *)
+	tab  = #9;	(* tab character *)
+	nl   = #10;	(* newline character *)
+	cr   = #13;	(* carriage return *)
+	ff   = #12;	(* form feed character *)
 
-bs   = #8;	(* backspace character *)
-tab  = #9;	(* tab character *)
-nl   = #10;	(* newline character *)
-cr   = #13;	(* carriage return *)
-ff   = #12;	(* form feed character *)
+	max_elems  = 100;  (* maximum size of integer sets *)
 
 var
+	(* Filenames: *)
+	lfilename     : String;
+	pasfilename   : String;
+	lstfilename   : String;
+	codfilename   : String;
+	codfilepath   : String; { Under linux, binary and conf file 
+														are not in the same path}
+	(* Lex input, output, list and code template file: *)
+	yyin, yylst, yyout, yycod : Text;
 
-(* Filenames: *)
-
-lfilename     : String;
-pasfilename   : String;
-lstfilename   : String;
-codfilename   : String;
-codfilepath   : String; { Under linux, binary and conf file 
-                          are not in the same path}
-
-(* Lex input, output, list and code template file: *)
-
-yyin, yylst, yyout, yycod : Text;
-
-(* the following values are initialized and updated by the parser: *)
-
-line : String;  (* current input line *)
-lno  : Integer; (* current line number *)
-
-const
-
-max_elems  = 100;  (* maximum size of integer sets *)
+	(* the following values are initialized and updated by the parser: *)
+	line : String;  (* current input line *)
+	lno  : Integer; (* current line number *)
 
 type
+	(* String and character class pointers: *)
+	StrPtr    = PString;
+	CClass    = set of Char;
+	CClassPtr = ^CClass;
 
-(* String and character class pointers: *)
-
-StrPtr    = ^String;
-CClass    = set of Char;
-CClassPtr = ^CClass;
-
-(* Sorted integer sets: *)
-
-IntSet    = array [0..max_elems] of Integer;
+	(* Sorted integer sets: *)
+	IntSet    = array [0..max_elems] of Integer;
               (* word 0 is size *)
-IntSetPtr = ^IntSet;
+	IntSetPtr = ^IntSet;
 
-(* Regular expressions: *)
+	(* Regular expressions: *)
+	RegExpr = ^Node;
 
-RegExpr = ^Node;
+	NodeType = (mark_node,    (* marker node *)
+            	char_node,    (* character node *)
+            	str_node,     (* string node *)
+            	cclass_node,  (* character class node *)
+            	star_node,    (* star node *)
+            	plus_node,    (* plus node *)
+            	opt_node,     (* option node *)
+            	cat_node,     (* concatenation node *)
+            	alt_node);    (* alternatives node (|) *)
 
-NodeType = (mark_node,    (* marker node *)
-            char_node,    (* character node *)
-            str_node,     (* string node *)
-            cclass_node,  (* character class node *)
-            star_node,    (* star node *)
-            plus_node,    (* plus node *)
-            opt_node,     (* option node *)
-            cat_node,     (* concatenation node *)
-            alt_node);    (* alternatives node (|) *)
-
-Node = record case node_type : NodeType of
-         mark_node : (rule, pos : Integer);
-         char_node : (c : Char);
-         str_node : (str : StrPtr);
-         cclass_node : (cc : CClassPtr);
-         star_node, plus_node, opt_node : (r : RegExpr);
-         cat_node, alt_node : (r1, r2 : RegExpr);
-       end;
-
-(* Some standard character classes: *)
+	Node = record 
+		case node_type : NodeType of
+		mark_node : (rule, pos : Integer);
+		char_node : (c : Char);
+		str_node : (str : StrPtr);
+		cclass_node : (cc : CClassPtr);
+		star_node, plus_node, opt_node : (r : RegExpr);
+		cat_node, alt_node : (r1, r2 : RegExpr);
+	end;
 
 const
-
-letters   : CClass = ['A'..'Z','a'..'z','_'];
-digits    : CClass = ['0'..'9'];
-alphanums : CClass = ['A'..'Z','a'..'z','_','0'..'9'];
+	(* Some standard character classes: *)
+	letters   : CClass = ['A'..'Z','a'..'z','_'];
+	digits    : CClass = ['0'..'9'];
+	alphanums : CClass = ['A'..'Z','a'..'z','_','0'..'9'];
 
 (* Operations: *)
 
@@ -310,16 +296,14 @@ function regExprStr(r : RegExpr) : String;
 implementation
 
 uses 
-	lexmsgs;
+	lexmsgs, SysUtils;
 
 (* String and character class pointers: *)
 
 function newStr(str : String) : StrPtr;
   var strp : StrPtr;
   begin
-    getmem(strp, succ(length(str)));
-    move(str, strp^, succ(length(str)));
-    newStr := strp;
+    newStr := SysUtils.NewStr(str);
   end(*newStr*);
 
 function newCClass(cc : CClass) : CClassPtr;
