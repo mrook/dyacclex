@@ -1,6 +1,6 @@
 
     Delphi Yacc & Lex - Parser generator toolset for Delphi and Kylix
-    Copyright (C) 2003     Michiel Rook <michiel@grendelproject.nl>
+    Copyright (C) 2003,2004  Michiel Rook <michiel@grendelproject.nl>
 
     Based on Turbo Pascal Lex and Yacc Version 4.1
 
@@ -75,4 +75,4 @@
     
     -------------------------------------------------------------------------
 
-    $Id: README,v 1.2 2003/12/18 21:18:24 druid Exp $  
+    $Id: README,v 1.3 2004/02/24 14:17:57 druid Exp $  

@@ -1,6 +1,6 @@
 #
 # Delphi Yacc & Lex
-# Copyright (c) 2003 by Michiel Rook
+# Copyright (c) 2003,2004 by Michiel Rook
 # Based on Turbo Pascal Lex and Yacc Version 4.1
 # Compiler generator toolset for Turbo/Borland/Free Pascal and Delphi
 #
@@ -13,7 +13,7 @@
 #
 # Sources Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.1 2003/12/18 17:55:09 druid Exp $
+# $Id: Makefile,v 1.2 2004/02/24 14:17:57 druid Exp $
 #
 
 

@@ -1,11 +1,11 @@
 #
 # Delphi Yacc & Lex
-# Copyright (c) 2003 by Michiel Rook
+# Copyright (c) 2003,2004 by Michiel Rook
 # Based on Turbo Pascal Lex and Yacc Version 4.1
 #
 # Test Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.3 2003/12/18 21:16:02 druid Exp $
+# $Id: Makefile,v 1.4 2004/02/24 14:17:57 druid Exp $
 #
 
 

@@ -1,13 +1,13 @@
 {
   Delphi Yacc & Lex
-  Copyright (c) 2003 by Michiel Rook
+  Copyright (c) 2003,2004 by Michiel Rook
   Based on Turbo Pascal Lex and Yacc Version 4.1
 
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexopt.pas,v 1.3 2003/12/18 21:01:02 druid Exp $
+  ## $Id: lexopt.pas,v 1.4 2004/02/24 14:17:57 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

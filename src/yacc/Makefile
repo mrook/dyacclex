@@ -1,6 +1,6 @@
 #
 # Delphi Yacc & Lex
-# Copyright (c) 2003 by Michiel Rook
+# Copyright (c) 2003,2004 by Michiel Rook
 # Based on Turbo Pascal Lex and Yacc Version 4.1
 # Compiler generator toolset for Turbo/Borland/Free Pascal and Delphi
 #
@@ -13,7 +13,7 @@
 #
 # Sources Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.2 2004/02/23 20:44:44 druid Exp $
+# $Id: Makefile,v 1.3 2004/02/24 14:17:57 druid Exp $
 #
 
 
@@ -42,7 +42,7 @@ endif
 ifdef LINUX
 DCC=dcc
 
-YACC=dyacc
+YACC=./dyacc
 RM=rm -f
 endif
 
@@ -65,7 +65,7 @@ clean:
 	$(RM) *.dcp
 
 dyacc.dpr:	dyacc.y
-	dyacc dyacc.y dyacc.dpr
+	$(YACC) dyacc.y dyacc.dpr
 
 $(YACC):	$(YACC_SOURCES) $(YACC_UNITS)
 	$(DCC) $(YACC_SOURCES) -D$(DCC_DEFS) $(DCC_FLAGS) -U$(UNITDIRS)
