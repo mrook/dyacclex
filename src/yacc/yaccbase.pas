@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yaccbase.pas,v 1.5 2004/02/24 14:17:57 druid Exp $
+  ## $Id: yaccbase.pas,v 1.6 2004/02/24 14:18:36 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -207,7 +207,6 @@ uses
 (* String pointers: *)
 
 function newStr(str : String) : StrPtr;
-  var strp : StrPtr;
   begin
     newStr := SysUtils.NewStr(str);
   end(*newStr*);
