@@ -6,8 +6,9 @@
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
+  Copyright (c) 2004     Morris Johns, Christchurch, NZ.
   
-  ## $Id: dlex.dpr,v 1.5 2004/02/24 14:17:57 druid Exp $
+  ## $Id: dlex.dpr,v 1.6 2004/08/17 19:25:53 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,15 +31,15 @@ program dlex;
 
 
 uses
-	SysUtils,
-	lexbase, 
-	lextable, 
-	lexpos, 
-	lexdfa, 
-	lexopt, 
-	lexlist, 
-	lexrules, 
-	lexmsgs;
+  SysUtils,
+  lexbase,
+  lextable,
+  lexpos,
+  lexdfa,
+  lexopt,
+  lexlist,
+  lexrules,
+  lexmsgs;
 
 
 procedure get_line;
@@ -222,30 +223,30 @@ procedure generate_table;
       while not Quit do begin
         if c1 in cc then  begin
           if col>0 then
-	    begin
-	      write(f, ',');
-	      inc(col);
-	    end;
-	  if col>40 then
-	    { insert line break }
-	    begin
-	      writeln(f);
-	      write(f, ' ':12);
-	      col := 0;
-	    end;
-	  c2 := c1;
-	  while (c2<MaxChar) and (succ(c2) in cc) do
-	    c2 := succ(c2);
-	  if c1=c2 then
-	    tag := charStr(c1)
-	  else if c2=succ(c1) then
-	    tag := charStr(c1)+','+charStr(c2)
-	  else
-	    tag := charStr(c1)+'..'+charStr(c2);
-	  write(f, tag);
-	  col := col + length(tag);
+      begin
+        write(f, ',');
+        inc(col);
+      end;
+    if col>40 then
+      { insert line break }
+      begin
+        writeln(f);
+        write(f, ' ':12);
+        col := 0;
+      end;
+    c2 := c1;
+    while (c2<MaxChar) and (succ(c2) in cc) do
+      c2 := succ(c2);
+    if c1=c2 then
+      tag := charStr(c1)
+    else if c2=succ(c1) then
+      tag := charStr(c1)+','+charStr(c2)
+    else
+      tag := charStr(c1)+'..'+charStr(c2);
+    write(f, tag);
+    col := col + length(tag);
           c1 := c2;
-	end;
+  end;
         Quit := c1 = MaxChar;
         if not Quit then
           c1 := Succ(c1);
@@ -477,7 +478,7 @@ procedure definitions;
           end
       end(*check_id*);
     var i : Integer;
-	com : String;
+  com : String;
     begin
       split(line, 2);
       com := upper(itemv(1));
@@ -569,7 +570,9 @@ procedure auxiliary_procs;
 
 (* Main program: *)
 
-var i : Integer;
+var
+  i : Integer;
+  Attrs : Integer;
 
 begin
   codfilepath := ExtractFilePath(paramstr(0));
@@ -594,6 +597,8 @@ begin
     if copy(paramStr(i), 1, 1)='-' then
       if upper(paramStr(i))='-V' then
         verbose := true
+      else if upper(paramStr(i))='-R' then
+        readonlyflag := true
       else if upper(paramStr(i))='-O' then
         optimize := true
       else
@@ -621,6 +626,17 @@ begin
   lstfilename := root(lfilename)+'.lst';
 
   (* open files: *)
+
+{$WARN SYMBOL_PLATFORM OFF}
+{$IFDEF MSWINDOWS}
+  if readonlyflag then begin
+    if FileExists(pasfilename) then begin
+      Attrs := FileGetAttr(pasfilename);
+      FileSetAttr(pasfilename, Attrs and not faReadOnly);
+    end;
+  end;
+{$WARN SYMBOL_PLATFORM ON}
+{$ENDIF}
 
   assign(yyin, lfilename);
   assign(yyout, pasfilename);
@@ -672,6 +688,15 @@ begin
   (* close files: *)
 
   close(yyin); close(yyout); close(yylst); close(yycod);
+
+{$WARN SYMBOL_PLATFORM OFF}
+{$IFDEF MSWINDOWS}
+  if readonlyflag then begin
+    Attrs := FileGetAttr(pasfilename);
+    FileSetAttr(pasfilename, Attrs or faReadOnly);
+  end;
+{$ENDIF}
+{$WARN SYMBOL_PLATFORM ON}
 
   (* print statistics: *)
 
