@@ -64,8 +64,5 @@ clean:
 	$(RM) *.drc
 	$(RM) *.dcp
 
-dyacc.dpr:	dyacc.y
-	$(YACC) dyacc.y dyacc.dpr
-
 $(YACC):	$(YACC_SOURCES) $(YACC_UNITS)
 	$(DCC) $(YACC_SOURCES) -D$(DCC_DEFS) $(DCC_FLAGS) -U$(UNITDIRS)
