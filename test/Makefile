@@ -5,7 +5,7 @@
 #
 # Test Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.1 2003/12/18 19:37:46 druid Exp $
+# $Id: Makefile,v 1.2 2003/12/18 21:01:37 druid Exp $
 #
 
 
@@ -20,12 +20,12 @@ ifdef WIN32
 DCC=dcc32
 
 EXPRTEST=exprtest.exe
-UNITDIRS=..\src
+UNITDIRS='..\src'
 
 MAKE=$(CURDIR)/../make
 
-DYACC=..\src\yacc\dyacc
-DLEX=..\src\lex\dlex
+DYACC='..\src\yacc\dyacc'
+DLEX='..\src\lex\dlex'
 
 ifeq ($(OS), Windows_NT)
 	RM=cmd /c del
@@ -63,6 +63,8 @@ $(EXPRTEST): exprtest.dpr expr.pas exprlex.pas
       
 clean:
 	$(RM) $(EXPRTEST) 
+	$(RM) exprlex.pas
+	$(RM) expr.pas
 	$(RM) *.map
 	$(RM) *.dcu
 	$(RM) *.dpu
