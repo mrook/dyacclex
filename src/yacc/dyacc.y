@@ -12,6 +12,7 @@ program dyacc;
 {$Q+}
 
 uses
+	SysUtils,
 	dlib,
 	yacclib,
 	yaccbase,
@@ -591,11 +592,7 @@ var
 	parser : TParser;
 
 begin
-{$ifdef linux}
-  codfilepath:='/usr/lib/fpc/lexyacc/';
-{$else}
-  codfilepath:=path(paramstr(0));
-{$endif}
+  codfilepath := ExtractFilePath(paramstr(0));
 
   (* sign-on: *)
 

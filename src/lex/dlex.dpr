@@ -6,7 +6,7 @@
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   
-  $Id: dlex.dpr,v 1.2 2003/12/18 18:40:04 druid Exp $
+  $Id: dlex.dpr,v 1.3 2003/12/18 19:36:54 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,15 @@ program dlex;
 
 
 uses
-  lexbase, lextable, lexpos, lexdfa, lexopt, lexlist, lexrules, lexmsgs;
+	SysUtils,
+	lexbase, 
+	lextable, 
+	lexpos, 
+	lexdfa, 
+	lexopt, 
+	lexlist, 
+	lexrules, 
+	lexmsgs;
 
 
 procedure get_line;
@@ -563,11 +571,7 @@ procedure auxiliary_procs;
 var i : Integer;
 
 begin
-{$ifdef linux}
-  codfilepath:='/usr/lib/fpc/lexyacc/';
-{$else}
-  codfilepath:=path(paramstr(0));
-{$endif}
+  codfilepath := ExtractFilePath(paramstr(0));
 
   (* sign-on: *)
 
