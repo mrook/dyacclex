@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexdfa.pas,v 1.4 2004/02/24 14:17:57 druid Exp $
+  ## $Id: lexdfa.pas,v 1.5 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,46 +31,47 @@ interface
 
 
 procedure makeDFATable;
-  (* construct DFA from position table *)
+(* construct DFA from position table *)
 
 implementation
 
-uses 
-	lexbase, 
-	lextable;
+uses
+  lexbase,
+  lextable;
 
 procedure makeDFATable;
-  var i : Integer;
+var
+  i: integer;
+begin
+  (* initialize start states: *)
+  for i := 2 to 2 * n_start_states + 1 do
+    setunion(first_pos_table^[i]^, first_pos_table^[i mod 2]^);
+  for i := 0 to 2 * n_start_states + 1 do
+    act_state := newState(first_pos_table^[i]);
+  act_state := -1;
+  while succ(act_state) < n_states do
   begin
-    (* initialize start states: *)
-    for i := 2 to 2*n_start_states+1 do
-      setunion(first_pos_table^[i]^, first_pos_table^[i mod 2]^);
-    for i := 0 to 2*n_start_states+1 do
-      act_state := newState(first_pos_table^[i]);
-    act_state := -1;
-    while succ(act_state)<n_states do
-      begin
-        inc(act_state);
-        (* add transitions for active state: *)
-        startStateTrans;
-        for i := 1 to size(state_table^[act_state].state_pos^) do
-          with pos_table^[state_table^[act_state].state_pos^[i]] do
-            if pos_type=char_pos then
-              addTrans([c], follow_pos)
-            else if pos_type=cclass_pos then
-              addTrans(cc^, follow_pos)
-            else if pos=0 then
-              state_table^[act_state].final := true;
-        (* assign next states: *)
-        for i := state_table^[act_state].trans_lo to n_trans do
-          with trans_table^[i] do
-            next_state := addState(follow_pos);
-        (* merge transitions for the same next state: *)
-        mergeTrans;
-        (* sort transitions: *)
-        sortTrans;
-        endStateTrans;
-      end;
-  end(*makeDFATable*);
+    Inc(act_state);
+    (* add transitions for active state: *)
+    startStateTrans;
+    for i := 1 to size(state_table^[act_state].state_pos^) do
+      with pos_table^[state_table^[act_state].state_pos^[i]] do
+        if pos_type = char_pos then
+          addTrans([c], follow_pos)
+        else if pos_type = cclass_pos then
+          addTrans(cc^, follow_pos)
+        else if pos = 0 then
+          state_table^[act_state].final := True;
+    (* assign next states: *)
+    for i := state_table^[act_state].trans_lo to n_trans do
+      with trans_table^[i] do
+        next_state := addState(follow_pos);
+    (* merge transitions for the same next state: *)
+    mergeTrans;
+    (* sort transitions: *)
+    sortTrans;
+    endStateTrans;
+  end;
+end(*makeDFATable*);
 
 end(*LexDFA*).

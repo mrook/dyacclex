@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexlib.pas,v 1.2 2004/02/24 14:17:57 druid Exp $
+  ## $Id: lexlib.pas,v 1.3 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,11 +27,6 @@
 {$I-}
 
 unit lexlib;
-
-{
-	Summary:
-		Lex Library Unit
-}
 
 interface
 
@@ -67,10 +62,10 @@ interface
    reset, and rewrite for this purpose). *)
 
 var
-	yyinput, yyoutput : Text;        (* input and output file *)
-	yyline            : String;      (* current input line *)
-	yylineno, yycolno : Integer;     (* current input position *)
-	yytext            : String;      (* matched text (should be considered r/o) *)
+  yyinput, yyoutput: Text;        (* input and output file *)
+  yyline: string;      (* current input line *)
+  yylineno, yycolno: integer;     (* current input position *)
+  yytext: string;      (* matched text (should be considered r/o) *)
 
 (* I/O routines:
 
@@ -94,42 +89,42 @@ var
    put_char by another suitable set of routines, e.g. if you want to read
    from/write to memory, etc. *)
 
-function get_char : Char;
+function get_char: char;
   (* obtain one character from the input file (null character at end-of-
      file) *)
 
-procedure unget_char ( c : Char );
+procedure unget_char(c: char);
   (* return one character to the input file to be reread in subsequent calls
      to get_char *)
 
-procedure put_char ( c : Char );
-  (* write one character to the output file *)
+procedure put_char(c: char);
+(* write one character to the output file *)
 
 (* Utility routines: *)
 
 procedure echo;
-  (* echoes the current match to the output stream *)
+(* echoes the current match to the output stream *)
 
 procedure yymore;
-  (* append the next match to the current one *)
+(* append the next match to the current one *)
 
-procedure yyless ( n : Integer );
+procedure yyless(n: integer);
   (* truncate yytext to size n and return the remaining characters to the
      input stream *)
 
 procedure reject;
-  (* reject the current match and execute the next one *)
+(* reject the current match and execute the next one *)
 
   (* reject does not actually cause the input to be rescanned; instead,
      internal state information is used to find the next match. Hence
      you should not try to modify the input stream or the yytext variable
      when rejecting a match. *)
 
-procedure return ( n : Integer );
-procedure returnc ( c : Char );
-  (* sets the return value of yylex *)
+procedure return(n: integer);
+procedure returnc(c: char);
+(* sets the return value of yylex *)
 
-procedure start ( state : Integer );
+procedure start(state: integer);
   (* puts the lexical analyzer in the given start state; state=0 denotes
      the default start state, other values are user-defined *)
 
@@ -141,7 +136,7 @@ procedure start ( state : Integer );
    file. In particular, yywrap may arrange for more input and return false
    in which case the yylex routine resumes lexical analysis. *)
 
-function yywrap : Boolean;
+function yywrap: boolean;
   (* The default yywrap routine supplied here closes input and output files
      and returns true (causing yylex to terminate). *)
 
@@ -150,13 +145,13 @@ function yywrap : Boolean;
 
 var
 
-yystate    : Integer; (* current state of lexical analyzer *)
-yyactchar  : Char;    (* current character *)
-yylastchar : Char;    (* last matched character (#0 if none) *)
-yyrule     : Integer; (* matched rule *)
-yyreject   : Boolean; (* current match rejected? *)
-yydone     : Boolean; (* yylex return value set? *)
-yyretval   : Integer; (* yylex return value *)
+  yystate:    integer; (* current state of lexical analyzer *)
+  yyactchar:  char;    (* current character *)
+  yylastchar: char;    (* last matched character (#0 if none) *)
+  yyrule:     integer; (* matched rule *)
+  yyreject:   boolean; (* current match rejected? *)
+  yydone:     boolean; (* yylex return value set? *)
+  yyretval:   integer; (* yylex return value *)
 
 procedure yynew;
   (* starts next match; initializes state information of the lexical
@@ -166,19 +161,19 @@ procedure yyscan;
   (* gets next character from the input stream and updates yytext and
      yyactchar accordingly *)
 
-procedure yymark ( n : Integer );
-  (* marks position for rule no. n *)
+procedure yymark(n: integer);
+(* marks position for rule no. n *)
 
-procedure yymatch ( n : Integer );
-  (* declares a match for rule number n *)
+procedure yymatch(n: integer);
+(* declares a match for rule number n *)
 
-function yyfind ( var n : Integer ) : Boolean;
+function yyfind(var n: integer): boolean;
   (* finds the last match and the corresponding marked position and adjusts
      the matched string accordingly; returns:
      - true if a rule has been matched, false otherwise
      - n: the number of the matched rule *)
 
-function yydefault : Boolean;
+function yydefault: boolean;
   (* executes the default action (copy character); returns true unless
      at end-of-file *)
 
@@ -188,63 +183,68 @@ procedure yyclear;
 
 implementation
 
-procedure fatal ( msg : String );
-  (* writes a fatal error message and halts program *)
-  begin
-    writeln('LexLib: ', msg);
-    halt(1);
-  end(*fatal*);
+procedure fatal(msg: string);
+(* writes a fatal error message and halts program *)
+begin
+  writeln('LexLib: ', msg);
+  halt(1);
+end(*fatal*);
 
 (* I/O routines: *)
 
-const nl = #10;  (* newline character *)
+const
+  nl = #10;  (* newline character *)
 
-const max_chars = 2048;
+const
+  max_chars = 2048;
 
 var
 
-bufptr : Integer;
-buf    : array [1..max_chars] of Char;
+  bufptr: integer;
+  buf:    array [1..max_chars] of char;
 
-function get_char : Char;
-  var i : Integer;
+function get_char: char;
+var
+  i: integer;
+begin
+  if (bufptr = 0) and not EOF(yyinput) then
   begin
-    if (bufptr=0) and not eof(yyinput) then
-      begin
-        readln(yyinput, yyline);
-        inc(yylineno); yycolno := 1;
-        buf[1] := nl;
-        for i := 1 to length(yyline) do
-          buf[i+1] := yyline[length(yyline)-i+1];
-        inc(bufptr, length(yyline)+1);
-      end;
-    if bufptr>0 then
-      begin
-        get_char := buf[bufptr];
-        dec(bufptr);
-        inc(yycolno);
-      end
-    else
-      get_char := #0;
-  end(*get_char*);
+    readln(yyinput, yyline);
+    Inc(yylineno);
+    yycolno := 1;
+    buf[1]  := nl;
+    for i := 1 to length(yyline) do
+      buf[i + 1] := yyline[length(yyline) - i + 1];
+    Inc(bufptr, length(yyline) + 1);
+  end;
+  if bufptr > 0 then
+  begin
+    Result := buf[bufptr];
+    Dec(bufptr);
+    Inc(yycolno);
+  end
+  else
+    Result := #0;
+end(*get_char*);
 
-procedure unget_char ( c : Char );
-  begin
-    if bufptr=max_chars then fatal('input buffer overflow');
-    inc(bufptr);
-    dec(yycolno);
-    buf[bufptr] := c;
-  end(*unget_char*);
+procedure unget_char(c: char);
+begin
+  if bufptr = max_chars then
+    fatal('input buffer overflow');
+  Inc(bufptr);
+  Dec(yycolno);
+  buf[bufptr] := c;
+end(*unget_char*);
 
-procedure put_char ( c : Char );
-  begin
-    if c=#0 then
-      { ignore }
-    else if c=nl then
-      writeln(yyoutput)
-    else
-      write(yyoutput, c)
-  end(*put_char*);
+procedure put_char(c: char);
+begin
+  if c = #0 then
+  { ignore }
+  else if c = nl then
+    writeln(yyoutput)
+  else
+    Write(yyoutput, c)
+end(*put_char*);
 
 (* Variables:
 
@@ -267,166 +267,172 @@ procedure put_char ( c : Char );
 
 const
 
-max_matches = 1024;
-max_rules   = 256;
+  max_matches = 1024;
+  max_rules   = 256;
 
 var
 
-yystext            : String;
-yysstate, yylstate : Integer;
-yymatches          : Integer;
-yystack            : array [1..max_matches] of Integer;
-yypos              : array [1..max_rules] of Integer;
-yysleng            : Byte;
+  yystext:   string;
+  yysstate, yylstate: integer;
+  yymatches: integer;
+  yystack:   array [1..max_matches] of integer;
+  yypos:     array [1..max_rules] of integer;
+  yysleng:   byte;
 
 (* Utilities: *)
 
 procedure echo;
-  var i : Integer;
-  begin
-    for i := 1 to length(yytext) do
-      put_char(yytext[i])
-  end(*echo*);
+var
+  i: integer;
+begin
+  for i := 1 to length(yytext) do
+    put_char(yytext[i])
+end(*echo*);
 
 procedure yymore;
-  begin
-    yystext := yytext;
-  end(*yymore*);
+begin
+  yystext := yytext;
+end(*yymore*);
 
-procedure yyless ( n : Integer );
-  var i : Integer;
-  begin
-    for i := length(yytext) downto n+1 do
-      unget_char(yytext[i]);
-    setlength(yytext, n);
-  end(*yyless*);
+procedure yyless(n: integer);
+var
+  i: integer;
+begin
+  for i := length(yytext) downto n + 1 do
+    unget_char(yytext[i]);
+  setlength(yytext, n);
+end(*yyless*);
 
 procedure reject;
-  var i : Integer;
-  begin
-    yyreject := true;
-    for i := length(yytext)+1 to yysleng do
-      yytext := yytext+get_char;
-    dec(yymatches);
-  end(*reject*);
+var
+  i: integer;
+begin
+  yyreject := True;
+  for i := length(yytext) + 1 to yysleng do
+    yytext := yytext + get_char;
+  Dec(yymatches);
+end(*reject*);
 
-procedure return ( n : Integer );
-  begin
-    yyretval := n;
-    yydone := true;
-  end(*return*);
+procedure return(n: integer);
+begin
+  yyretval := n;
+  yydone   := True;
+end(*return*);
 
-procedure returnc ( c : Char );
-  begin
-    yyretval := ord(c);
-    yydone := true;
-  end(*returnc*);
+procedure returnc(c: char);
+begin
+  yyretval := Ord(c);
+  yydone   := True;
+end(*returnc*);
 
-procedure start ( state : Integer );
-  begin
-    yysstate := state;
-  end(*start*);
+procedure start(state: integer);
+begin
+  yysstate := state;
+end(*start*);
 
 (* yywrap: *)
 
-function yywrap : Boolean;
-  begin
-    close(yyinput); close(yyoutput);
-    yywrap := true;
-  end(*yywrap*);
+function yywrap: boolean;
+begin
+  Close(yyinput);
+  Close(yyoutput);
+  Result := True;
+end(*yywrap*);
 
 (* Internal routines: *)
 
 procedure yynew;
-  begin
-    if yylastchar<>#0 then
-      if yylastchar=nl then
-        yylstate := 1
-      else
-        yylstate := 0;
-    yystate := yysstate+yylstate;
-    yytext  := yystext;
-    yystext := '';
-    yymatches := 0;
-    yydone := false;
-  end(*yynew*);
+begin
+  if yylastchar <> #0 then
+    if yylastchar = nl then
+      yylstate := 1
+    else
+      yylstate := 0;
+  yystate := yysstate + yylstate;
+  yytext    := yystext;
+  yystext   := '';
+  yymatches := 0;
+  yydone    := False;
+end(*yynew*);
 
 procedure yyscan;
-  begin
-    if length(yytext)=255 then fatal('yytext overflow');
-    yyactchar := get_char;
-    yytext := yytext + yyactchar;
-  end(*yyscan*);
+begin
+  if length(yytext) = 255 then
+    fatal('yytext overflow');
+  yyactchar := get_char;
+  yytext    := yytext + yyactchar;
+end(*yyscan*);
 
-procedure yymark ( n : Integer );
-  begin
-    if n>max_rules then fatal('too many rules');
-    yypos[n] := length(yytext);
-  end(*yymark*);
+procedure yymark(n: integer);
+begin
+  if n > max_rules then
+    fatal('too many rules');
+  yypos[n] := length(yytext);
+end(*yymark*);
 
-procedure yymatch ( n : Integer );
-  begin
-    inc(yymatches);
-    if yymatches>max_matches then fatal('match stack overflow');
-    yystack[yymatches] := n;
-  end(*yymatch*);
+procedure yymatch(n: integer);
+begin
+  Inc(yymatches);
+  if yymatches > max_matches then
+    fatal('match stack overflow');
+  yystack[yymatches] := n;
+end(*yymatch*);
 
-function yyfind ( var n : Integer ) : Boolean;
+function yyfind(var n: integer): boolean;
+begin
+  yyreject := False;
+  while (yymatches > 0) and (yypos[yystack[yymatches]] = 0) do
+    Dec(yymatches);
+  if yymatches > 0 then
   begin
-    yyreject := false;
-    while (yymatches>0) and (yypos[yystack[yymatches]]=0) do
-      dec(yymatches);
-    if yymatches>0 then
-      begin
-        yysleng := length(yytext);
-        n       := yystack[yymatches];
-        yyless(yypos[n]);
-        yypos[n] := 0;
-        if length(yytext)>0 then
-          yylastchar := yytext[length(yytext)]
-        else
-          yylastchar := #0;
-        yyfind := true;
-      end
+    yysleng := length(yytext);
+    n := yystack[yymatches];
+    yyless(yypos[n]);
+    yypos[n] := 0;
+    if length(yytext) > 0 then
+      yylastchar := yytext[length(yytext)]
     else
-      begin
-        yyless(0);
-        yylastchar := #0;
-        yyfind := false;
-      end
-  end(*yyfind*);
+      yylastchar := #0;
+    Result := True;
+  end
+  else begin
+    yyless(0);
+    yylastchar := #0;
+    Result     := False;
+  end
+end(*yyfind*);
 
-function yydefault : Boolean;
+function yydefault: boolean;
+begin
+  yyreject  := False;
+  yyactchar := get_char;
+  if yyactchar <> #0 then
   begin
-    yyreject := false;
-    yyactchar := get_char;
-    if yyactchar<>#0 then
-      begin
-        put_char(yyactchar);
-        yydefault := true;
-      end
-    else
-      begin
-        yylstate := 1;
-        yydefault := false;
-      end;
-    yylastchar := yyactchar;
-  end(*yydefault*);
+    put_char(yyactchar);
+    Result := True;
+  end
+  else begin
+    yylstate := 1;
+    Result   := False;
+  end;
+  yylastchar := yyactchar;
+end(*yydefault*);
 
 procedure yyclear;
-  begin
-    bufptr := 0;
-    yysstate := 0;
-    yylstate := 1;
-    yylastchar := #0;
-    yytext := '';
-    yystext := '';
-  end(*yyclear*);
+begin
+  bufptr     := 0;
+  yysstate   := 0;
+  yylstate   := 1;
+  yylastchar := #0;
+  yytext     := '';
+  yystext    := '';
+end(*yyclear*);
 
 begin
-  assign(yyinput, '');
-  assign(yyoutput, '');
-  reset(yyinput); rewrite(yyoutput);
+  Assign(yyinput, '');
+  Assign(yyoutput, '');
+  reset(yyinput);
+  rewrite(yyoutput);
   yylineno := 0;
   yyclear;
 end(*LexLib*).

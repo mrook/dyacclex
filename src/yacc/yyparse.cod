@@ -3,25 +3,26 @@
 var yylval : YYSType;
 
 type
-	TLexer = class(TLexerParserBase)
-	public
-		function parse() : integer; override;
-	end;
-	
-	TParser = class(TLexerParserBase)
-	public
-		lexer : TLexer;
+  TLexer = class(TLexerParserBase)
+  public
+    function parse() : integer; override;
+  end;
 
-		function parse() : integer; override;
-	end;
+  TParser = class(TLexerParserBase)
+  public
+    lexer : TLexer;
+
+    function parse() : integer; override;
+  end;
 
 
 function TParser.parse() : integer;
 
-var yystate, yysp, yyn : Integer;
-    yys : array [1..yymaxdepth] of Integer;
-    yyv : array [1..yymaxdepth] of YYSType;
-    yyval : YYSType;
+var 
+  yystate, yysp, yyn : Integer;
+  yys : array [1..yymaxdepth] of Integer;
+  yyv : array [1..yymaxdepth] of YYSType;
+  yyval : YYSType;
 
 procedure yyaction ( yyruleno : Integer );
   (* local definitions: *)

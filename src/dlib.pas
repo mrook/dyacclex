@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: dlib.pas,v 1.2 2004/02/24 14:17:57 druid Exp $
+  ## $Id: dlib.pas,v 1.3 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,19 +26,14 @@
 
 unit dlib;
 
-{
-	Summary:
-		Library Unit for Lex & Yacc
-}
-
 interface
 
 
 type
-	TLexerParserBase = class
-	public
-		function parse() : integer; virtual; abstract;
-	end;
+  TLexerParserBase = class
+  public
+    function parse(): integer; virtual; abstract;
+  end;
 
 
 implementation

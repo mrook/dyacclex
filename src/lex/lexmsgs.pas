@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexmsgs.pas,v 1.5 2004/08/17 19:27:42 druid Exp $
+  ## $Id: lexmsgs.pas,v 1.6 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,112 +29,118 @@ unit lexmsgs;
 interface
 
 
-var errors, warnings : Integer;
-  (* - current error and warning count *)
-procedure error(msg : String; pos : Integer);
+var
+  errors, warnings: integer;
+
+(* - current error and warning count *)
+procedure error(msg: string; pos: integer);
   (* - print current input line and error message (pos denotes position to
        mark in source file line) *)
-procedure warning(msg : String; pos : Integer);
-  (* - print warning message *)
-procedure fatal(msg : String);
+procedure warning(msg: string; pos: integer);
+(* - print warning message *)
+procedure fatal(msg: string);
   (* - writes a fatal error message, erases Lex output file and terminates
        the program with errorlevel 1 *)
 
 const
 
-(* sign-on and usage message: *)
+  (* sign-on and usage message: *)
 
-sign_on = 'Delphi Lex - Copyright (c) 2003,2004 by Michiel Rook'#13#10'Based on Turbo Pascal Lex 4.1, Copyright (c) 1990-2000 Albert Graef';
-usage   = 'Usage: dlex [options] lex-file[.l] [output-file[.pas]]';
-options = 'Options: -v verbose, -o optimize, -r readonly output';
+  sign_on = 'Delphi Lex - Copyright (c) 2003,2004 by Michiel Rook'#13#10'Based on Turbo Pascal Lex 4.1, Copyright (c) 1990-2000 Albert Graef';
+  usage   = 'Usage: dlex [options] lex-file[.l] [output-file[.pas]]';
+  options = 'Options: -v verbose, -o optimize, -r readonly output';
 
-(* command line error messages: *)
+  (* command line error messages: *)
 
-invalid_option                  = 'invalid option ';
-illegal_no_args                 = 'illegal number of parameters';
+  invalid_option  = 'invalid option ';
+  illegal_no_args = 'illegal number of parameters';
 
-(* syntax errors: *)
+  (* syntax errors: *)
 
-unmatched_lbrace                = '101: unmatched %{';
-syntax_error 			= '102: syntax error';
-unexpected_eof                  = '103: unexpected end of file';
+  unmatched_lbrace = '101: unmatched %{';
+  syntax_error     = '102: syntax error';
+  unexpected_eof   = '103: unexpected end of file';
 
-(* semantic errors: *)
+  (* semantic errors: *)
 
-symbol_already_defined 		= '201: symbol already defined';
-undefined_symbol                = '202: undefined symbol';
-invalid_charnum                 = '203: invalid character number';
-empty_grammar 			= '204: empty grammar?';
+  symbol_already_defined = '201: symbol already defined';
+  undefined_symbol = '202: undefined symbol';
+  invalid_charnum  = '203: invalid character number';
+  empty_grammar    = '204: empty grammar?';
 
-(* fatal errors: *)
+  (* fatal errors: *)
 
-cannot_open_file 		= 'FATAL: cannot open file ';
-write_error                     = 'FATAL: write error';
-mem_overflow 			= 'FATAL: memory overflow';
-intset_overflow 		= 'FATAL: integer set overflow';
-sym_table_overflow 		= 'FATAL: symbol table overflow';
-pos_table_overflow 		= 'FATAL: position table overflow';
-state_table_overflow 		= 'FATAL: state table overflow';
-trans_table_overflow 		= 'FATAL: transition table overflow';
-macro_stack_overflow 		= 'FATAL: macro stack overflow';
+  cannot_open_file = 'FATAL: cannot open file ';
+  write_error      = 'FATAL: write error';
+  mem_overflow     = 'FATAL: memory overflow';
+  intset_overflow  = 'FATAL: integer set overflow';
+  sym_table_overflow = 'FATAL: symbol table overflow';
+  pos_table_overflow = 'FATAL: position table overflow';
+  state_table_overflow = 'FATAL: state table overflow';
+  trans_table_overflow = 'FATAL: transition table overflow';
+  macro_stack_overflow = 'FATAL: macro stack overflow';
 
 implementation
 
-uses 
-	lexbase;
+uses
+  lexbase;
 
-procedure position(var f : Text;
-            lineNo : integer;
-            line : String;
-            pos : integer);
+procedure position(var f: Text; lineNo: integer;
+  line: string; pos: integer);
   (* writes a position mark of the form
      gfilename (lineno): line
                           ^
      on f with the caret ^ positioned at pos in line
      a subsequent write starts at the next line, indented with tab *)
-  var
-    line1, line2 : String;
-  begin
-    (* this hack handles tab characters in line: *)
-    line1 := intStr(lineNo)+': '+line;
-    line2 := blankStr(intStr(lineNo)+': '+copy(line, 1, pos-1));
-    writeln(f, line1);
-    writeln(f, line2, '^');
-    write(f, tab)
-  end(*position*);
+var
+  line1, line2: string;
+begin
+  (* this hack handles tab characters in line: *)
+  line1 := intStr(lineNo) + ': ' + line;
+  line2 := blankStr(intStr(lineNo) + ': ' + copy(line, 1, pos - 1));
+  writeln(f, line1);
+  writeln(f, line2, '^');
+  Write(f, tab)
+end(*position*);
 
-procedure error(msg : String; pos : Integer);
-  begin
-    inc(errors);
-    writeln;
-    position(output, lno, line, pos);
-    writeln(msg);
-    writeln(yylst);
-    position(yylst, lno, line, pos);
-    writeln(yylst, msg);
-    if ioresult<>0 then ;
-  end(*error*);
+procedure error(msg: string; pos: integer);
+begin
+  Inc(errors);
+  writeln;
+  position(output, lno, line, pos);
+  writeln(msg);
+  writeln(yylst);
+  position(yylst, lno, line, pos);
+  writeln(yylst, msg);
+  if ioresult <> 0 then
+  ;
+end(*error*);
 
-procedure warning(msg : String; pos : Integer);
-  begin
-    inc(warnings);
-    writeln;
-    position(output, lno, line, pos);
-    writeln(msg);
-    writeln(yylst);
-    position(yylst, lno, line, pos);
-    writeln(yylst, msg);
-    if ioresult<>0 then ;
-  end(*warning*);
+procedure warning(msg: string; pos: integer);
+begin
+  Inc(warnings);
+  writeln;
+  position(output, lno, line, pos);
+  writeln(msg);
+  writeln(yylst);
+  position(yylst, lno, line, pos);
+  writeln(yylst, msg);
+  if ioresult <> 0 then
+  ;
+end(*warning*);
 
-procedure fatal(msg : String);
-  begin
-    writeln;
-    writeln(msg);
-    close(yyin); close(yyout); close(yylst); erase(yyout);
-    halt(1)
-  end(*fatal*);
+procedure fatal(msg: string);
+begin
+  writeln;
+  writeln(msg);
+  Close(yyin);
+  Close(yyout);
+  Close(yylst);
+  erase(yyout);
+  halt(1)
+end(*fatal*);
 
 begin
-  errors := 0; warnings := 0;
+  errors   := 0;
+  warnings := 0;
 end(*LexMsgs*).

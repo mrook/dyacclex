@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexlist.pas,v 1.4 2004/02/24 14:17:57 druid Exp $
+  ## $Id: lexlist.pas,v 1.5 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,23 +29,22 @@ unit lexlist;
 interface
 
 uses
-	lexbase;
-
+  lexbase;
 
 procedure listDFATable;
-  (* list DFA table *)
+(* list DFA table *)
 
 implementation
 
-uses 
-	lextable;
+uses
+  lextable;
 
-procedure listTrans(cc : CClassPtr; next_state : Integer);
+procedure listTrans(cc: CClassPtr; next_state: integer);
   (* list a transition in the format
         cc : next_state *)
-  begin
-    write(yylst, cclassOrCharStr(cc^):30, ' : ', next_state:5);
-  end(*listTrans*);
+begin
+  Write(yylst, cclassOrCharStr(cc^): 30, ' : ', next_state: 5);
+end(*listTrans*);
 
 {$ifdef debug}
 
@@ -80,8 +79,9 @@ procedure listPosTable;
 {$endif}
 
 procedure listDFATable;
-  var k, state : Integer;
-  begin
+var
+  k, state: integer;
+begin
 {$ifdef debug}
     (* list position table: *)
     writeln(yylst);
@@ -91,35 +91,35 @@ procedure listDFATable;
     writeln(yylst);
     writeln(yylst, '( states : )');
 {$endif}
+  writeln(yylst);
+  for state := 0 to pred(n_states) do
+  begin
     writeln(yylst);
-    for state := 0 to pred(n_states) do
-      begin
-        writeln(yylst);
-        write(yylst, state);
-        with state_table^[state] do
-          begin
-            if final then
-              write(yylst, '* :')
-            else
-              write(yylst, '  :');
+    Write(yylst, state);
+    with state_table^[state] do
+    begin
+      if final then
+        Write(yylst, '* :')
+      else
+        Write(yylst, '  :');
 {$ifdef debug}
             for k := 1 to size(state_pos^) do
               write(yylst, ' ', state_pos^[k]:5);
 {$else}
-            for k := 1 to size(state_pos^) do
-              with pos_table^[state_pos^[k]] do
-		if (pos_type=mark_pos) and (pos=0) then
-                  write(yylst, ' ', rule:5);
+      for k := 1 to size(state_pos^) do
+        with pos_table^[state_pos^[k]] do
+          if (pos_type = mark_pos) and (pos = 0) then
+            Write(yylst, ' ', rule: 5);
 {$endif}
-            writeln(yylst);
-            for k := trans_lo to trans_hi do
-              with trans_table^[k] do
-                begin
-                  listTrans(cc, next_state);
-                  writeln(yylst);
-                end;
-          end;
-      end;
-  end(*listDFATable*);
+      writeln(yylst);
+      for k := trans_lo to trans_hi do
+        with trans_table^[k] do
+        begin
+          listTrans(cc, next_state);
+          writeln(yylst);
+        end;
+    end;
+  end;
+end(*listDFATable*);
 
 end(*LexList*).

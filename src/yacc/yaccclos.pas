@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yaccclos.pas,v 1.4 2004/02/24 14:17:57 druid Exp $
+  ## $Id: yaccclos.pas,v 1.5 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,16 +30,16 @@ interface
 
 
 procedure closures;
-  (* compute the closure sets *)
+(* compute the closure sets *)
 
 procedure first_sets;
-  (* compute first sets and nullable flags *)
+(* compute first sets and nullable flags *)
 
 implementation
 
-uses 
-	yaccbase, 
-	yacctabl;
+uses
+  yaccbase,
+  yacctabl;
 
 procedure closures;
 
@@ -56,38 +56,39 @@ procedure closures;
      The algorithm terminates as soon as no additional symbols have been
      added during the previous pass. *)
 
-  var sym, i, count, prev_count : Integer;
-      act_syms : IntSet;
+var
+  sym, i, Count, prev_count: integer;
+  act_syms: IntSet;
 
+begin
+  (* initialize closure sets: *)
+  prev_count := 0;
+  Count      := 0;
+  for sym := 1 to n_nts do
   begin
-    (* initialize closure sets: *)
-    prev_count := 0;
-    count := 0;
-    for sym := 1 to n_nts do
-      begin
-        closure_table^[sym] := newEmptyIntSet;
-        with rule_offs^[sym] do
-          for i := rule_lo to rule_hi do
-            with rule_table^[rule_no^[i]]^ do
-              if (rhs_len>0) and (rhs_sym[1]<0) then
-                include(closure_table^[sym]^, rhs_sym[1]);
-        inc(count, size(closure_table^[sym]^));
-      end;
+    closure_table^[sym] := newEmptyIntSet;
+    with rule_offs^[sym] do
+      for i := rule_lo to rule_hi do
+        with rule_table^[rule_no^[i]]^ do
+          if (rhs_len > 0) and (rhs_sym[1] < 0) then
+            include(closure_table^[sym]^, rhs_sym[1]);
+    Inc(Count, size(closure_table^[sym]^));
+  end;
     (* repeated passes until no more symbols have been added during the last
        pass: *)
-    while prev_count<count do
-      begin
-        prev_count := count;
-        count := 0;
-        for sym := 1 to n_nts do
-          begin
-            act_syms := closure_table^[sym]^;
-            for i := 1 to size(act_syms) do
-              setunion(closure_table^[sym]^, closure_table^[-act_syms[i]]^);
-            inc(count, size(closure_table^[sym]^));
-          end;
-      end;
-  end(*closures*);
+  while prev_count < Count do
+  begin
+    prev_count := Count;
+    Count      := 0;
+    for sym := 1 to n_nts do
+    begin
+      act_syms := closure_table^[sym]^;
+      for i := 1 to size(act_syms) do
+        setunion(closure_table^[sym]^, closure_table^[ -act_syms[i]]^);
+      Inc(Count, size(closure_table^[sym]^));
+    end;
+  end;
+end(*closures*);
 
 procedure first_sets;
 
@@ -109,50 +110,50 @@ procedure first_sets;
      first set and none of the nullable flags have been changed during the
      previous pass. *)
 
-  var i, j, l, sym : Integer;
-      n, null, done : Boolean;
+var
+  i, j, l, sym:  integer;
+  n, null, done: boolean;
 
+begin
+  (* initialize tables: *)
+  for sym := 1 to n_nts do
   begin
-    (* initialize tables: *)
-    for sym := 1 to n_nts do
-      begin
-        nullable^[sym] := false;
-        first_set_table^[sym] := newEmptyIntSet;
-      end;
+    nullable^[sym] := False;
+    first_set_table^[sym] := newEmptyIntSet;
+  end;
     (* repeated passes until no more symbols added and no nullable flags
        modified: *)
-    repeat
-      done := true;
-      for i := 1 to n_rules do
-        with rule_table^[i]^ do
+  repeat
+    done := True;
+    for i := 1 to n_rules do
+      with rule_table^[i]^ do
+      begin
+        l    := size(first_set_table^[ -lhs_sym]^);
+        n    := nullable^[ -lhs_sym];
+        null := True;
+        j    := 1;
+        while (j <= rhs_len) and null do
+        begin
+          if rhs_sym[j] < 0 then
           begin
-            l := size(first_set_table^[-lhs_sym]^);
-            n := nullable^[-lhs_sym];
-            null := true;
-            j := 1;
-            while (j<=rhs_len) and null do
-              begin
-                if rhs_sym[j]<0 then
-                  begin
-                    setunion( first_set_table^[-lhs_sym]^,
-                              first_set_table^[-rhs_sym[j]]^ );
-                    null := nullable^[-rhs_sym[j]];
-                  end
-                else
-                  begin
-                    include( first_set_table^[-lhs_sym]^,
-                             rhs_sym[j] );
-                    null := false;
-                  end;
-                inc(j);
-              end;
-            if null then nullable^[-lhs_sym] := true;
-            if (l<size(first_set_table^[-lhs_sym]^)) or
-               (n<>nullable^[-lhs_sym]) then
-              done := false;
+            setunion(first_set_table^[ -lhs_sym]^,
+              first_set_table^[ -rhs_sym[j]]^);
+            null := nullable^[ -rhs_sym[j]];
+          end
+          else  begin
+            include(first_set_table^[ -lhs_sym]^,
+              rhs_sym[j]);
+            null := False;
           end;
-    until done;
-  end(*first_sets*);
+          Inc(j);
+        end;
+        if null then
+          nullable^[ -lhs_sym] := True;
+        if (l < size(first_set_table^[ -lhs_sym]^)) or
+          (n <> nullable^[ -lhs_sym]) then
+          done := False;
+      end;
+  until done;
+end(*first_sets*);
 
 end(*YaccClosure*).
-

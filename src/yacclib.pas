@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yacclib.pas,v 1.3 2004/02/24 14:17:57 druid Exp $
+  ## $Id: yacclib.pas,v 1.4 2004/08/17 20:07:24 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,31 +28,28 @@
 
 unit yacclib;
 
-{
-	Summary:
-		Yacc Library Unit
-}
-
 interface
 
-const yymaxdepth = 1024;
-  (* default stack size of parser *)
+const
+  yymaxdepth = 1024;
+(* default stack size of parser *)
 
-type YYSType = Integer;
-  (* default value type, may be redefined in Yacc output file *)
+type
+  YYSType = integer;
+(* default value type, may be redefined in Yacc output file *)
 
 var
 
-yychar   : Integer; (* current lookahead character *)
-yynerrs  : Integer; (* current number of syntax errors reported by the
-                       parser *)
-yydebug  : Boolean; (* set to true to enable debugging output of parser *)
+  yychar:  integer; (* current lookahead character *)
+  yynerrs: integer;
 
-procedure yyerror ( msg : String );
-  (* error message printing routine used by the parser *)
+(* current number of syntax errors reported by the
+                       parser *)
+procedure yyerror(msg: string);
+(* error message printing routine used by the parser *)
 
 procedure yyclearin;
-  (* delete the current lookahead token *)
+(* delete the current lookahead token *)
 
 procedure yyaccept;
   (* trigger accept action of the parser; yyparse accepts returning 0, as if
@@ -74,39 +71,39 @@ procedure yyerrok;
 
 var
 
-yyflag    : ( yyfnone, yyfaccept, yyfabort, yyferror );
-yyerrflag : Integer;
+  yyflag:    (yyfnone, yyfaccept, yyfabort, yyferror);
+  yyerrflag: integer;
 
 implementation
 
-procedure yyerror ( msg : String );
-  begin
-    writeln(msg);
-  end(*yyerrmsg*);
+procedure yyerror(msg: string);
+begin
+  writeln(msg);
+end(*yyerrmsg*);
 
 procedure yyclearin;
-  begin
-    yychar := -1;
-  end(*yyclearin*);
+begin
+  yychar := -1;
+end(*yyclearin*);
 
 procedure yyaccept;
-  begin
-    yyflag := yyfaccept;
-  end(*yyaccept*);
+begin
+  yyflag := yyfaccept;
+end(*yyaccept*);
 
 procedure yyabort;
-  begin
-    yyflag := yyfabort;
-  end(*yyabort*);
+begin
+  yyflag := yyfabort;
+end(*yyabort*);
 
 procedure yyerrlab;
-  begin
-    yyflag := yyferror;
-  end(*yyerrlab*);
+begin
+  yyflag := yyferror;
+end(*yyerrlab*);
 
 procedure yyerrok;
-  begin
-    yyerrflag := 0;
-  end(*yyerrork*);
+begin
+  yyerrflag := 0;
+end(*yyerrork*);
 
 end(*YaccLib*).
