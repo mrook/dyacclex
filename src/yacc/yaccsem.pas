@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yaccsem.pas,v 1.4 2004/02/24 14:17:57 druid Exp $
+  ## $Id: yaccsem.pas,v 1.5 2004/08/17 19:37:13 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ unit yaccsem;
 
 interface
 
+uses
+  SysUtils;
 
 var
 
@@ -36,6 +38,9 @@ act_prec : Integer;
      %token declaration) *)
 act_type : Integer;
   (* active type tag in token, precedence and type declarations *)
+
+union_declared : Boolean = False;
+  (* true if union declaration used *)
 
 procedure yyerror ( msg : String );
   (* YaccLib.yyerror redefined to ignore 'syntax error' message; the parser
@@ -66,6 +71,9 @@ procedure definitions;
 
 procedure copy_code;
   (* copy Turbo Pascal code section ( %{ ... %} ) to output file *)
+
+procedure copy_union_code;
+  (* copy union Turbo Pascal code section ( %union { ... } ) to output file *)
 
 procedure copy_action;
   (* copy an action to the output file *)
@@ -243,35 +251,63 @@ function litsym ( k : Integer; n : Integer ) : Integer;
         else
           s := new_lit;
         def_key(k, s);
-        writeln(yyout, 'const ', pname(s), ' = ', s, ';');
+        writeln(yyout, 'const ' + pname(s) + ' = ' + IntToStr(s) + ';');
         litsym := s;
       end;
   end(*litsym*);
 
 procedure next_section;
   var line : String;
+      isfirstline : Boolean;
   begin
+    isfirstline := true;
     while not eof(yycod) do
       begin
         readln(yycod, line);
+        inc(yycodlno);
         if line='%%' then exit;
+        if isfirstline then begin
+          writeln(yyout, '// source: ' + codfilename + ' line# ' + IntToStr(yycodlno) );
+          isfirstline := false;
+        end;
         writeln(yyout, line);
       end;
   end(*next_section*);
 
 procedure definitions;
-  var i : Integer;
+  var
+    i : Integer;
+    sType : String;
   begin
+    if union_declared then
+      (* user has defined YYSType in manner of their own choosing
+         User can also do %union { } and the YYSType declaration can then
+         be made in another unit, which is great if you want to use a
+         TObject descendent class -MPJ 9/10/2004
+      *)
+    else
     if n_types>0 then
       begin
+        // This used to generate an unpacked variant record (like a C union statement).
+        // However that prevented you from using String or Variant or Interface types.
+        // If you need performance, or your code depends upon writing a var as one type
+        // and reading a different var back to do conversion, then you will neede to
+        // define your own type using the %union statement.
+        // Any existing code that was dependent upon the union of variables would be
+        // broken, but it would be broken anyway on upgrade so no problem! -MPJ 9/10/2004
         writeln(yyout);
-        writeln(yyout, 'type YYSType = record case Integer of');
-        for i := 1 to n_types do
-          writeln(yyout, ' ':15, i:3, ' : ( ',
-                         'yy', sym_table^[type_table^[i]].pname^, ' : ',
-                         sym_table^[type_table^[i]].pname^, ' );');
-        writeln(yyout, ' ':15, 'end(*YYSType*);');
-      end;
+        writeln(yyout, '// If you have defined your own YYSType then put an empty  %union { } in');
+        writeln(yyout, '// your .y file. Or you can put your type definition within the curly braces.');
+        writeln(yyout, 'type YYSType = record');
+        for i := 1 to n_types do begin
+          sType := sym_table^[type_table^[i]].pname^;
+          writeln(yyout, '                 yy' + sType + ' : ' + sType + ';');
+        end;
+        writeln(yyout, '               end(*YYSType*);');
+      end
+      else
+        writeln(yyout, 'type YYSType = Integer(*YYSType*);');
+
   end(*definitions*);
 
 procedure copy_code;
@@ -298,6 +334,42 @@ procedure copy_code;
           next_char;
         end;
   end(*copy_code*);
+
+procedure copy_union_code;
+  var str_state : Boolean;
+  begin
+    str_state := false;
+    // skip white space
+    while act_char in [#13,#10,' ',#9] do
+      next_char;
+    if act_char <> '{' then
+      exit;
+    next_char;
+
+    writeln(yyout, '// source: %union');
+    while act_char<>#0 do
+      if act_char=nl then
+        begin
+          writeln(yyout);
+          next_char;
+        end
+      else if act_char='''' then
+        begin
+          write(yyout, '''');
+          str_state := not str_state;
+          next_char;
+        end
+      else if act_char='}' then
+        begin
+          union_declared := True;
+          exit;
+        end
+      else
+        begin
+          write(yyout, act_char);
+          next_char;
+        end;
+  end(*copy_union_code*);
 
 procedure scan_val;
   (* process a $ value in an action
@@ -344,7 +416,7 @@ procedure scan_val;
               tokleng := 1;
               error(type_error);
             end;
-        if tag<>'' then write(yyout, '.yy', tag);
+        if tag<>'' then write(yyout, '.yy' + tag);
         next_char;
       end
     else
@@ -368,7 +440,7 @@ procedure scan_val;
             if code=0 then
               if i<=act_rule.rhs_len then
                 begin
-                  write(yyout, 'yyv[yysp-', act_rule.rhs_len-i, ']');
+                  write(yyout, 'yyv[yysp-' + IntToStr(act_rule.rhs_len-i) + ']');
                   (* check for value type: *)
                   if (tag='') and (n_types>0) then with act_rule do
                     if i<=0 then
@@ -383,7 +455,7 @@ procedure scan_val;
                         tokleng := length(numstr)+1;
                         error(type_error);
                       end;
-                  if tag<>'' then write(yyout, '.yy', tag);
+                  if tag<>'' then write(yyout, '.yy' + tag);
                 end
               else
                 begin
@@ -403,14 +475,15 @@ procedure copy_action;
   begin
     str_state := false;
     while act_char=' ' do next_char;
-    write(yyout, ' ':9);
+    writeln(yyout, '         // source: ' + ExtractFileName(yfilename) + ' line#' + IntToStr(lno));
+    write(yyout, StringOfChar(' ',9));
     while act_char<>#0 do
       if act_char=nl then
         begin
           writeln(yyout);
           next_char;
           while act_char=' ' do next_char;
-          write(yyout, ' ':9);
+          write(yyout, StringOfChar(' ',9));
         end
       else if act_char='''' then
         begin
@@ -437,14 +510,14 @@ procedure copy_single_action;
   begin
     str_state := false;
     while act_char=' ' do next_char;
-    write(yyout, ' ':9);
+    write(yyout, StringOfChar(' ',9));
     while act_char<>#0 do
       if act_char=nl then
         begin
           writeln(yyout);
           next_char;
           while act_char=' ' do next_char;
-          write(yyout, ' ':9);
+          write(yyout, StringOfChar(' ',9));
         end
       else if act_char='''' then
         begin
@@ -504,24 +577,24 @@ procedure start_body;
   begin
     act_rule.rhs_len := 0;
     p_act := false;
-    writeln(yyout, n_rules:4, ' : begin');
+    writeln(yyout, IntToStr(n_rules) + ' : begin');
   end(*start_body*);
 
 procedure end_body;
   begin
     if not p_act and (act_rule.rhs_len>0) then
       (* add default action: *)
-      writeln(yyout, ' ':9, 'yyval := yyv[yysp-',
-                            act_rule.rhs_len-1, '];');
+      writeln(yyout, '         yyval := yyv[yysp-' +
+                     IntToStr(act_rule.rhs_len-1) + '];');
     add_rule(newRuleRec(act_rule));
-    writeln(yyout, ' ':7, 'end;');
+    writeln(yyout, '       end;');
   end(*end_body*);
 
 procedure add_rule_action;
   (* process an action inside a rule *)
   var k : Integer; r : RuleRec;
   begin
-    writeln(yyout, ' ':7, 'end;');
+    writeln(yyout, '       end;');
     inc(n_act);
     k := get_key('$$'+intStr(n_act));
     with r do
@@ -539,7 +612,7 @@ procedure add_rule_action;
     add_rule(newRuleRec(r));
     rule_prec^[n_rules+1] := rule_prec^[n_rules];
     rule_prec^[n_rules] := 0;
-    writeln(yyout, n_rules:4, ' : begin');
+    writeln(yyout, IntToStr(n_rules) + ' : begin');
   end(*add_rule_action*);
 
 procedure add_symbol ( sym : Integer );
@@ -551,7 +624,7 @@ procedure add_symbol ( sym : Integer );
         inc(rhs_len);
         if rhs_len>max_rule_len then fatal(rule_table_overflow);
         rhs_sym[rhs_len] := sym;
-        if sym>=0 then rule_prec^[n_rules+1] := sym_prec^[sym]
+        if sym>=0 then rule_prec^[n_rules+1] := sym_prec^[sym];
       end
   end(*add_symbol*);
 

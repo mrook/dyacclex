@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yaccbase.pas,v 1.6 2004/02/24 14:18:36 druid Exp $
+  ## $Id: yaccbase.pas,v 1.7 2004/08/17 19:37:13 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ var
 	line      : String;  (* current input line *)
 	lno, cno  : Integer; (* current input position (line/column) *)
 	tokleng   : Integer; (* length of current token *)
+  yycodlno  : Integer; (* yyparse.cod current input line *)
 
 type
 	(* String pointers: *)

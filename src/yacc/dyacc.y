@@ -6,8 +6,9 @@
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
+  Copyright (c) 2004     Morris Johns, Christchurch, NZ.
   
-  ## $Id: dyacc.y,v 1.4 2004/02/24 14:17:57 druid Exp $
+  ## $Id: dyacc.y,v 1.5 2004/08/17 19:37:13 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,16 +33,18 @@ program dyacc;
 {$R+}
 {$Q+}
 
+{%File 'dyacc.y'}
+
 uses
-	SysUtils,
-	dlib,
-	yacclib,
-	yaccbase,
-	yaccmsgs,
-	yaccsem,
-	yacctabl,
-	yaccpars;
-  
+  SysUtils,
+  dlib in '..\dlib.pas',
+  yacclib in '..\yacclib.pas',
+  yaccbase,
+  yaccmsgs,
+  yaccsem,
+  yacctabl,
+  yaccpars;
+
 %}
 
 /* Lexical part of the Yacc language: */
@@ -53,7 +56,7 @@ uses
   LITERAL       /* single character literal */
   LITID         /* multiple character literal */
   NUMBER	/* nonnegative integers: {digit}+ */
-  PTOKEN PLEFT PRIGHT PNONASSOC PTYPE PSTART PPREC
+  PTOKEN PLEFT PRIGHT PNONASSOC PTYPE PSTART PPREC PUNION
   		/* reserved words: PTOKEN=%token, etc. */
   PP		/* source sections separator %% */
   LCURL		/* curly braces: %{ and %} */
@@ -75,6 +78,7 @@ literal         : LITERAL
 litid           : LITID
 number		: NUMBER
 ptoken		: PTOKEN        { yyerrok; }
+punion          : PUNION        { yyerrok; }
 pleft		: PLEFT	        { yyerrok; }
 pright		: PRIGHT        { yyerrok; }
 pnonassoc	: PNONASSOC	{ yyerrok; }
@@ -131,6 +135,8 @@ def		: pstart id
 		| ptoken
 				{ act_prec := 0; }
 		  tag token_list
+
+		| punion { copy_union_code; } '}'
 
 		| pleft
 				{ act_prec := new_prec_level(left); }
@@ -367,10 +373,10 @@ function TLexer.parse() : integer;
             ('0'<=line[cno]) and (line[cno]<='9') or
             (line[cno]='_') or
             (line[cno]='.') ) do
-	begin
-	  idstr := idstr+line[cno];
-	  inc(cno)
-	end;
+        begin
+          idstr := idstr+line[cno];
+          inc(cno)
+        end;
       yylval := get_key(idstr);
       scan;
       if not end_of_input and (line[cno]=':') then
@@ -486,14 +492,14 @@ function TLexer.parse() : integer;
     function lookup(key : String; var tok : integer) : boolean;
       (* table of Yacc keywords (unstropped): *)
       const
-        no_of_entries = 11;
+        no_of_entries = 12;
         max_entry_length = 8;
         keys : array [1..no_of_entries] of String[max_entry_length] = (
           '0', '2', 'binary', 'left', 'nonassoc', 'prec', 'right',
-          'start', 'term', 'token', 'type');
+          'start', 'term', 'token', 'type', 'union');
         toks : array [1..no_of_entries] of integer = (
           PTOKEN, PNONASSOC, PNONASSOC, PLEFT, PNONASSOC, PPREC, PRIGHT,
-          PSTART, PTOKEN, PTOKEN, PTYPE);
+          PSTART, PTOKEN, PTOKEN, PTYPE, PUNION);
       var m, n, k : integer;
       begin
         (* binary search: *)
@@ -588,9 +594,9 @@ function TLexer.parse() : integer;
     else
       case line[cno] of
         'A'..'Z', 'a'..'z', '_' : Result := scan_ident;
-	'''', '"' : Result := scan_literal;
-	'0'..'9' : Result := scan_num;
-	'%', '\' : Result := scan_keyword;
+        '''', '"' : Result := scan_literal;
+        '0'..'9' : Result := scan_num;
+        '%', '\' : Result := scan_keyword;
         '=' :
           if (cno<length(line)) and (line[succ(cno)]='{') then
             begin
@@ -599,7 +605,7 @@ function TLexer.parse() : integer;
             end
           else
             Result := scan_char;
-	else Result := scan_char;
+        else Result := scan_char;
       end;
     if lno=lno0 then
       tokleng := cno-cno0
@@ -607,13 +613,16 @@ function TLexer.parse() : integer;
 
 (* Main program: *)
 
-var 
-	i : Integer;
-	lexer : TLexer;
-	parser : TParser;
+var
+  i : Integer;
+  lexer : TLexer;
+  parser : TParser;
+  readonlyflag : Boolean;
+  Attrs : Integer;
 
 begin
   codfilepath := ExtractFilePath(paramstr(0));
+  readonlyflag := False;
 
   (* sign-on: *)
 
@@ -635,6 +644,8 @@ begin
     if copy(paramStr(i), 1, 1)='-' then
       if upper(paramStr(i))='-V' then
         verbose := true
+      else if upper(paramStr(i))='-R' then
+        readonlyflag := true
       else if upper(paramStr(i))='-D' then
         debug := true
       else
@@ -663,6 +674,17 @@ begin
 
   (* open files: *)
 
+{$WARN SYMBOL_PLATFORM OFF}
+{$IFDEF MSWINDOWS}
+  if readonlyflag then begin
+    if FileExists(pasfilename) then begin
+      Attrs := FileGetAttr(pasfilename);
+      FileSetAttr(pasfilename, Attrs and not faReadOnly);
+    end;
+  end;
+{$WARN SYMBOL_PLATFORM ON}
+{$ENDIF}
+
   assign(yyin, yfilename);
   assign(yyout, pasfilename);
   assign(yylst, lstfilename);
@@ -688,11 +710,13 @@ begin
 
   write('parse ... ');
 
-  lno := 0; cno := 1; line := '';
+  lno := 0; cno := 1; line := ''; yycodlno := 0;
+
 
   next_section;
-  if debug then writeln(yyout, '{$define yydebug}');
-  
+  if debug then writeln(yyout, '{$DEFINE YYDEBUG}');
+  if debug then writeln(yyout, '{$DEFINE YYEXTRADEBUG}');
+
   lexer := TLexer.Create();
   parser := TParser.Create();
   parser.lexer := lexer;
@@ -709,6 +733,15 @@ begin
   (* close files: *)
 
   close(yyin); close(yyout); close(yylst); close(yycod);
+
+{$WARN SYMBOL_PLATFORM OFF}
+{$IFDEF MSWINDOWS}
+  if readonlyflag then begin
+    Attrs := FileGetAttr(pasfilename);
+    FileSetAttr(pasfilename, Attrs or faReadOnly);
+  end;
+{$ENDIF}
+{$WARN SYMBOL_PLATFORM ON}
 
   (* print statistics: *)
 

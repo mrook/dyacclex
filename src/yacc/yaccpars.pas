@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yaccpars.pas,v 1.4 2004/02/24 14:17:57 druid Exp $
+  ## $Id: yaccpars.pas,v 1.5 2004/08/17 19:37:13 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ unit yaccpars;
 
 interface
 
+uses
+  SysUtils;
 
 procedure parse_table;
 
@@ -423,6 +425,7 @@ procedure tables;
   (* write tables to output file *)
 
   var s, i, j, count : Integer;
+      symname : String;
 
   begin
 
@@ -430,9 +433,22 @@ procedure tables;
     writeln(yyout, 'type YYARec = record');
     writeln(yyout, '                sym, act : Integer;');
     writeln(yyout, '              end;');
-    writeln(yyout, '     YYRRec = record');
-    writeln(yyout, '                len, sym : Integer;');
-    writeln(yyout, '              end;');
+    if debug then
+      begin
+        writeln(yyout, '     YYRRec = record');
+        writeln(yyout, '                len, sym : Integer;');
+        writeln(yyout, '                symname : String;');
+        writeln(yyout, '              end;');
+        writeln(yyout, '     YYTokenRec = record');
+        writeln(yyout, '                tokenname : String;');
+        writeln(yyout, '              end;');
+      end
+    else
+      begin
+        writeln(yyout, '     YYRRec = record');
+        writeln(yyout, '                len, sym : Integer;');
+        writeln(yyout, '              end;');
+      end;
     writeln(yyout);
     writeln(yyout, 'const');
 
@@ -443,6 +459,7 @@ procedure tables;
     writeln(yyout, 'yyngotos  = ', yyngotos, ';');
     writeln(yyout, 'yynstates = ', yynstates, ';');
     writeln(yyout, 'yynrules  = ', n_rules-1, ';');
+    writeln(yyout, 'yymaxtoken = ', n_lits-1, ';');
 
     (* shift/reduce table: *)
 
@@ -555,12 +572,31 @@ procedure tables;
     writeln(yyout, 'yyr : array [1..yynrules] of YYRRec = (');
     for i := 2 to n_rules do with rule_table^[i]^ do
       begin
+        if debug then begin
+          symname := '; symname: ' + AnsiQuotedStr(pname(lhs_sym),'''');
+        end;
         write(yyout, '{ ', i-1, ': } ', '( len: ', rhs_len,
-                                        '; sym: ', lhs_sym, ' )');
+                                        '; sym: ', lhs_sym,
+                                        symname, ' )');
         if i<n_rules then write(yyout, ',');
         writeln(yyout);
       end;
     writeln(yyout, ');');
+
+    (* token table: *)
+
+    if debug then
+      begin
+        writeln(yyout);
+        writeln(yyout, 'yytokens : array [256..yymaxtoken] of YYTokenRec = (');
+        for i := 256 to n_lits-1 do
+          begin
+            write(yyout, '{ ' + IntToStr(i) + ': } ( tokenname: ' + AnsiQuotedStr(pname(i),'''') + ' )');
+            if i<n_lits-1 then write(yyout, ',');
+            writeln(yyout);
+          end;
+        writeln(yyout, ');');
+      end;
 
     writeln(yyout);
 
