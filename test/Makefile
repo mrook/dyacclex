@@ -5,7 +5,7 @@
 #
 # Test Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.2 2003/12/18 21:01:37 druid Exp $
+# $Id: Makefile,v 1.3 2003/12/18 21:16:02 druid Exp $
 #
 
 
@@ -19,7 +19,7 @@ endif
 ifdef WIN32
 DCC=dcc32
 
-EXPRTEST=exprtest.exe
+EXPR=expr.exe
 UNITDIRS='..\src'
 
 MAKE=$(CURDIR)/../make
@@ -38,7 +38,7 @@ endif
 ifdef LINUX
 DCC=dcc
 
-EXPRTEST=exprtest
+EXPR=expr
 UNITDIRS=../src
 
 DYACC=../src/yacc/dyacc
@@ -50,21 +50,21 @@ endif
 DCC_FLAGS=-Q -GD
 
 
-all:	$(EXPRTEST)
+all:	$(EXPR)
 
-expr.pas: expr.y
-	$(DYACC) expr.y
+expr.dpr: expr.y
+	$(DYACC) expr.y expr.dpr
 	
 exprlex.pas: exprlex.l
 	$(DLEX) exprlex.l
 
-$(EXPRTEST): exprtest.dpr expr.pas exprlex.pas
-	$(DCC) exprtest.dpr $(DCC_FLAGS) -U$(UNITDIRS)
+$(EXPR): expr.dpr exprlex.pas
+	$(DCC) expr.dpr $(DCC_FLAGS) -U$(UNITDIRS)
       
 clean:
-	$(RM) $(EXPRTEST) 
+	$(RM) $(EXPR) 
 	$(RM) exprlex.pas
-	$(RM) expr.pas
+	$(RM) expr.dpr
 	$(RM) *.map
 	$(RM) *.dcu
 	$(RM) *.dpu

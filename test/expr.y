@@ -1,10 +1,10 @@
 %{
-unit expr;
+program expr;
+{$APPTYPE CONSOLE}
 
-interface
 
-
-uses 
+uses
+	SysUtils,
 	dlib,
 	yacclib,
 	lexlib;
@@ -51,8 +51,17 @@ expr    :  expr '+' expr	 { $$ := $1 + $3; }
 {$I exprlex.pas}
 
 var 
+	lexer : TLexer;
+	parser : TParser;
 	i : Integer;
 	
 begin
-  for i := 1 to 26 do x[i] := 0.0;
+	for i := 1 to 26 do 
+		x[i] := 0.0;
+
+	lexer := TLexer.Create();
+   
+	parser := TParser.Create();
+	parser.lexer := lexer;
+	parser.parse();
 end.
