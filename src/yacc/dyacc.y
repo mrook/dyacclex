@@ -13,8 +13,12 @@ program dyacc;
 
 uses
 	dlib,
-  YaccLib, YaccBase, YaccMsgs, YaccSem, YaccTabl, YaccPars;
-  
+	yacclib,
+	yaccbase,
+	yaccmsgs,
+	yaccsem,
+	yacctabl,
+	yaccpars;
   
 %}
 
@@ -710,12 +714,6 @@ begin
     end;
 
   if warnings>0 then writeln(warnings, ' warnings.');
-
-{$ifndef fpc}
-{$IFNDEF Win32}
-  writeln( n_bytes, '/', max_bytes, ' bytes of memory used.');
-{$ENDIF}
-{$endif}
 
   (* terminate: *)
 

@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: yacclib.pas,v 1.1 2003/12/18 17:55:09 druid Exp $
+  ## $Id: yacclib.pas,v 1.2 2003/12/18 18:40:03 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 {$I-}
 
-unit YaccLib;
+unit yacclib;
 
 {
 	Summary:

@@ -25,7 +25,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 10:23 $
 
 $History: LEXTABLE.PAS $
@@ -38,20 +38,13 @@ $History: LEXTABLE.PAS $
 }
 
 
-unit LexTable;
+unit lextable;
 
 interface
 
-uses LexBase;
+uses 
+	lexbase;
 
-
-{$IFNDEF Win32}
-var max_bytes : LongInt;
-  (* available memory *)
-
-function n_bytes : LongInt;
-  (* memory actually used *)
-{$ENDIF}
 
 const
 
@@ -204,14 +197,8 @@ procedure sortTrans;
 
 implementation
 
-uses LexMsgs;
-
-{$IFNDEF Win32}
-function n_bytes : LongInt;
-  begin
-    n_bytes := max_bytes-memAvail
-  end(*n_bytes*);
-{$ENDIF}
+uses 
+	lexmsgs;
 
 (* Hash table routines: *)
 
@@ -465,10 +452,6 @@ begin
 
   verbose          := false;
   optimize         := false;
-
-{$IFNDEF Win32}
-  max_bytes        := memAvail;
-{$ENDIF}
 
   n_pos            := 0;
   n_states         := 0;

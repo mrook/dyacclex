@@ -22,7 +22,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 14:09 $
 
 $History: YACCLOOK.PAS $
@@ -35,7 +35,7 @@ $History: YACCLOOK.PAS $
 }
 
 
-unit YaccLook;
+unit yacclook;
 
 interface
 
@@ -46,7 +46,9 @@ procedure lookaheads;
 
 implementation
 
-uses YaccBase, YaccTabl;
+uses 
+	yaccbase, 
+	yacctabl;
 
 (* This implementation is based on algorithms 4.12 and 4.13 in Aho/Sethi/
    Ullman 1986 (with some optimizations added), which avoid the need to

@@ -29,7 +29,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 15:18 $
 
 $History: YACCBASE.PAS $
@@ -42,7 +42,7 @@ $History: YACCBASE.PAS $
 }
 
 
-unit YaccBase;
+unit yaccbase;
 
 
 
@@ -233,7 +233,8 @@ function doubleQuoteStr(str : String) : String;
 
 implementation
 
-uses YaccMsgs;
+uses 
+	yaccmsgs;
 
 (* String pointers: *)
 

@@ -21,7 +21,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 14:09 $
 
 $History: YACCCLOS.PAS $
@@ -34,7 +34,7 @@ $History: YACCCLOS.PAS $
 }
 
 
-unit YaccClos;
+unit yaccclos;
 
 interface
 
@@ -47,7 +47,9 @@ procedure first_sets;
 
 implementation
 
-uses YaccBase, YaccTabl;
+uses 
+	yaccbase, 
+	yacctabl;
 
 procedure closures;
 

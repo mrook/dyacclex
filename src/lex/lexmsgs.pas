@@ -23,7 +23,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 8:52 $
 
 $History: LEXMSGS.PAS $
@@ -36,7 +36,7 @@ $History: LEXMSGS.PAS $
 }
 
 
-unit LexMsgs;
+unit lexmsgs;
 
 interface
 
@@ -92,7 +92,8 @@ macro_stack_overflow 		= 'FATAL: macro stack overflow';
 
 implementation
 
-uses LexBase;
+uses 
+	lexbase;
 
 procedure position(var f : Text;
             lineNo : integer;
@@ -146,24 +147,6 @@ procedure fatal(msg : String);
     halt(1)
   end(*fatal*);
 
-{$ifndef fpc}
-{$IFNDEF Win32}
-function heapErrorHandler ( size : Word ): Integer; far;
-  begin
-    if size>0 then
-      fatal(mem_overflow) (* never returns *)
-    else
-      heapErrorHandler := 1
-  end(*heapErrorHandler*);
-{$ENDIF}
-{$endif}
-
 begin
   errors := 0; warnings := 0;
-{$ifndef fpc}
-{$IFNDEF Win32}
-  (* install heap error handler: *)
-  heapError := @heapErrorHandler;
-{$ENDIF}
-{$endif}
 end(*LexMsgs*).

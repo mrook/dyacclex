@@ -22,7 +22,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 6:29 $
 
 $History: LEXOPT.PAS $
@@ -35,7 +35,7 @@ $History: LEXOPT.PAS $
 }
 
 
-unit LexOpt;
+unit lexopt;
 
 interface
 
@@ -46,7 +46,9 @@ procedure optimizeDFATable;
 
 implementation
 
-uses LexBase, LexTable;
+uses 
+	lexbase, 
+	lextable;
 
 (* Partition table used in DFA optimization: *)
 

@@ -26,7 +26,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 6:30 $
 
 $History: LEXRULES.PAS $
@@ -39,11 +39,13 @@ $History: LEXRULES.PAS $
 }
 
 
-unit LexRules;
+unit lexrules;
 
 interface
 
-uses LexBase, LexTable;
+uses 
+	lexbase, 
+	lextable;
 
 
 procedure parse_rule ( rule_no : Integer );
@@ -66,7 +68,8 @@ r    : RegExpr;
 
 implementation
 
-uses LexMsgs;
+uses 
+	lexmsgs;
 
 (* Scanner routines:
 

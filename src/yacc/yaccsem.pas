@@ -20,7 +20,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 6:03 $
 
 $History: YACCSEM.PAS $
@@ -33,7 +33,7 @@ $History: YACCSEM.PAS $
 }
 
 
-unit YaccSem;
+unit yaccsem;
 
 interface
 
@@ -109,8 +109,14 @@ procedure generate_parser;
 
 implementation
 
-uses YaccBase, YaccTabl, YaccClos, YaccLR0, YaccLook,
-  YaccPars, YaccMsgs;
+uses 
+	yaccbase, 
+	yacctabl, 
+	yaccclos,
+	yacclr0,
+	yacclook,
+	yaccpars,
+	yaccmsgs;
 
 procedure yyerror ( msg : String );
   begin

@@ -29,7 +29,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 10:21 $
 
 $History: LEXBASE.PAS $
@@ -42,7 +42,7 @@ $History: LEXBASE.PAS $
 }
 
 
-unit LexBase;
+unit lexbase;
 
 interface
 
@@ -327,7 +327,8 @@ function regExprStr(r : RegExpr) : String;
 
 implementation
 
-uses LexMsgs;
+uses 
+	lexmsgs;
 
 (* String and character class pointers: *)
 

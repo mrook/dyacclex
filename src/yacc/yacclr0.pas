@@ -22,7 +22,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 14:09 $
 
 $History: YACCLR0.PAS $
@@ -35,7 +35,7 @@ $History: YACCLR0.PAS $
 }
 
 
-unit YaccLR0;
+unit yacclr0;
 
 interface
 
@@ -46,7 +46,9 @@ procedure LR0Set;
 
 implementation
 
-uses YaccBase, YaccTabl;
+uses 
+	yaccbase, 
+	yacctabl;
 
 (* This implementation is based on the algorithm given in Aho/Sethi/Ullman,
    1986, Section 4.7. *)

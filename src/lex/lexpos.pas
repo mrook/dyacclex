@@ -28,7 +28,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 6:30 $
 
 $History: LEXPOS.PAS $
@@ -41,12 +41,14 @@ $History: LEXPOS.PAS $
 }
 
 
-unit LexPos;
+unit lexpos;
 
 
 interface
 
-uses LexBase, LexTable;
+uses 
+	lexBase, 
+	lextable;
 
 
 procedure addExpr(r : RegExpr; var FIRST : IntSet);

@@ -23,7 +23,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 14:50 $
 
 $History: YACCMSGS.PAS $
@@ -36,7 +36,7 @@ $History: YACCMSGS.PAS $
 }
 
 
-unit YaccMsgs;
+unit yaccmsgs;
 
 interface
 
@@ -107,7 +107,8 @@ redn_table_overflow 		= 'FATAL: reduction table overflow';
 
 implementation
 
-uses YaccBase;
+uses 
+	yaccbase;
 
 procedure position(var f : Text;
             lineNo : integer;
@@ -161,24 +162,6 @@ procedure fatal(msg : String);
     halt(1)
   end(*fatal*);
 
-{$ifndef fpc}
-{$IFNDEF Win32}
-function heapErrorHandler ( size : Word ) : Integer; far;
-  begin
-    if size>0 then
-      fatal(mem_overflow) (* never returns *)
-    else
-      heapErrorHandler := 1
-  end(*heapErrorHandler*);
-{$ENDIF}
-{$endif}
-
 begin
   errors := 0; warnings := 0;
-{$ifndef fpc}
-{$IFNDEF Win32}
-  (* install heap error handler: *)
-  heapError := @heapErrorHandler;
-{$ENDIF}
-{$endif}
 end(*YaccMsgs*).

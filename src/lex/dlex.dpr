@@ -6,7 +6,7 @@
   Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   
-  $Id: dlex.dpr,v 1.1 2003/12/18 17:56:07 druid Exp $
+  $Id: dlex.dpr,v 1.2 2003/12/18 18:40:04 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ program dlex;
 
 
 uses
-  LexBase, LexTable, LexPos, LexDFA, LexOpt, LexList, LexRules, LexMsgs;
+  lexbase, lextable, lexpos, lexdfa, lexopt, lexlist, lexrules, lexmsgs;
 
 
 procedure get_line;
@@ -681,12 +681,6 @@ begin
              n_trans, '/', max_trans, ' t.');
 
   if warnings>0 then writeln(warnings, ' warnings.');
-
-{$ifndef fpc}
-{$IFNDEF Win32}
-  writeln( n_bytes, '/', max_bytes, ' bytes of memory used.');
-{$ENDIF}
-{$endif}
 
   (* terminate: *)
 

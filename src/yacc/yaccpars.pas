@@ -20,7 +20,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 14:09 $
 
 $History: YACCPARS.PAS $
@@ -33,7 +33,7 @@ $History: YACCPARS.PAS $
 }
 
 
-unit YaccPars;
+unit yaccpars;
 
 interface
 
@@ -113,7 +113,9 @@ var shift_reduce, reduce_reduce, never_reduced : Integer;
 
 implementation
 
-uses YaccBase, YaccTabl;
+uses 
+	yaccbase, 
+	yacctabl;
 
 var reduced : array [1..max_rules] of Boolean;
 

@@ -27,7 +27,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-07-31 21:15 $
 
 $History: YACCTABL.PAS $
@@ -40,21 +40,13 @@ $History: YACCTABL.PAS $
 }
 
 
-unit YaccTabl;
+unit yacctabl;
 
 interface
 
 uses
-  YaccBase;
+	yaccbase;
 
-
-{$IFNDEF Win32}
-var max_bytes : LongInt;
-  (* available memory *)
-
-function n_bytes : LongInt;
-  (* memory actually used *)
-{$ENDIF}
 
 const
 
@@ -431,12 +423,6 @@ implementation
 
 uses YaccMsgs;
 
-{$IFNDEF Win32}
-function n_bytes : LongInt;
-  begin
-    n_bytes := max_bytes-memAvail
-  end(*n_bytes*);
-{$ENDIF}
 
 (* Symbol table routines: *)
 
@@ -928,10 +914,6 @@ begin
   verbose          := false;
   debug            := false;
   startnt          := 0;
-
-{$IFNDEF Win32}
-  max_bytes := memAvail;
-{$ENDIF}
 
   n_nts            := 1;
   n_lits           := 257;

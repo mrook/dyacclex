@@ -28,7 +28,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 $Modtime: 96-08-01 6:28 $
 
 $History: LEXLIST.PAS $
@@ -41,12 +41,12 @@ $History: LEXLIST.PAS $
 }
 
 
-unit LexList;
+unit lexlist;
 
 interface
 
 uses
-  LexBase;
+	lexbase;
 
 
 procedure listDFATable;
@@ -54,7 +54,8 @@ procedure listDFATable;
 
 implementation
 
-uses LexTable;
+uses 
+	lextable;
 
 procedure listTrans(cc : CClassPtr; next_state : Integer);
   (* list a transition in the format
