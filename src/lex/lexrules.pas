@@ -7,7 +7,7 @@
   Copyright (C) 1996     Berend de Boer <berend@pobox.com>
   Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
   
-  ## $Id: lexrules.pas,v 1.3 2003/12/18 21:01:02 druid Exp $
+  ## $Id: lexrules.pas,v 1.4 2004/01/25 20:05:00 druid Exp $
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -194,7 +194,10 @@ function act_char : Char;
     else
       begin
         while pop_macro do ;
-        act_char := buf[bufptr];
+	if bufptr>0 then
+		act_char := buf[bufptr]
+	else
+		act_char := #0;
       end
   end(*act_char*);
 
