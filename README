@@ -7,6 +7,7 @@
     Copyright (c) 1990-92  Albert Graef <ag@muwiinfa.geschichte.uni-mainz.de>
     Copyright (C) 1996     Berend de Boer <berend@pobox.com>
     Copyright (c) 1998     Michael Van Canneyt <Michael.VanCanneyt@fys.kuleuven.ac.be>
+    Copyright (c) 2004     Morris Johns, Christchurch, NZ.
   
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,6 +39,15 @@
     The project started because the original Turbo Pascal Lex and Yacc 
     did not compile well in Delphi 5+ or Kylix, the sourcecode was messy, 
     and the last release or activity dates back to early 2000.
+    
+    Changes:
+    
+    * Added support for '%union'
+    * Added readonly output to dlex/dyacc
+    * Added increased debugging output
+    * Numerous formatting and styling fixes
+    
+    See the file 'ChangeLog' for a complete list of fixes.
     
     Compilation:
     
@@ -75,4 +85,4 @@
     
     -------------------------------------------------------------------------
 
-    $Id: README,v 1.3 2004/02/24 14:17:57 druid Exp $  
+    $Id: README,v 1.4 2004/08/17 20:19:38 druid Exp $  
