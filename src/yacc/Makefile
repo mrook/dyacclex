@@ -13,7 +13,7 @@
 #
 # Sources Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.1 2003/12/18 17:56:15 druid Exp $
+# $Id: Makefile,v 1.2 2004/02/23 20:44:44 druid Exp $
 #
 
 
@@ -47,7 +47,7 @@ RM=rm -f
 endif
 
 
-DCC_FLAGS='-$$H-' -D+ '-$$W+' -Q -GD
+DCC_FLAGS=-D- -Q -GD
 
 YACC_SOURCES=dyacc.dpr
 YACC_UNITS=yaccbase.pas yaccclos.pas yacclook.pas yacclr0.pas yaccmsgs.pas yaccpars.pas yaccsem.pas yacctabl.pas

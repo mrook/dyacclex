@@ -13,7 +13,7 @@
 #
 # Main Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.2 2003/12/18 21:01:45 druid Exp $
+# $Id: Makefile,v 1.3 2004/02/23 20:44:44 druid Exp $
 #
 
 
@@ -25,3 +25,4 @@ test: all
 
 clean:
 	$(MAKE) -C src clean
+	$(MAKE) -C test clean

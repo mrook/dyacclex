@@ -13,7 +13,7 @@
 #
 # Lex Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.1 2003/12/18 17:56:07 druid Exp $
+# $Id: Makefile,v 1.2 2004/02/23 20:44:44 druid Exp $
 #
 
 
@@ -46,7 +46,7 @@ LEX=dlex
 RM=rm -f
 endif
 
-DCC_FLAGS='-$$H-' -D+ '-$$W+' -Q -GD
+DCC_FLAGS=-D- -Q -GD
 
 LEX_SOURCES=dlex.dpr
 LEX_UNITS=lexbase.pas lexdfa.pas lexlist.pas lexmsgs.pas lexopt.pas lexpos.pas lexrules.pas lextable.pas
