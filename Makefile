@@ -16,6 +16,8 @@
 # $Id$
 #
 
+BIN = $(DESTDIR)/usr/bin
+SHARE = $(DESTDIR)/usr/share/dyacclex
 
 all:	
 	$(MAKE) -C src
@@ -24,8 +26,12 @@ test: all
 	$(MAKE) -C test
 
 install: test
-	install src/lex/dlex $(DESTDIR)/usr/bin
-	install src/yacc/dyacc $(DESTDIR)/usr/bin
+	install -d $(BIN) $(SHARE)
+	install src/lex/dlex $(BIN)
+	install src/yacc/dyacc $(BIN)
+	
+	install src/lex/yylex.cod $(SHARE)
+	install src/yacc/yyparse.cod $(SHARE)
                 
 clean:
 	$(MAKE) -C src clean
