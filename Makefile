@@ -13,7 +13,7 @@
 #
 # Main Makefile - Use GNU make!
 #
-# $Id: Makefile,v 1.4 2004/02/24 14:17:57 druid Exp $
+# $Id$
 #
 
 
@@ -23,6 +23,10 @@ all:
 test: all
 	$(MAKE) -C test
 
+install: test
+	install src/lex/dlex $(DESTDIR)/usr/bin
+	install src/yacc/dyacc $(DESTDIR)/usr/bin
+                
 clean:
 	$(MAKE) -C src clean
 	$(MAKE) -C test clean
