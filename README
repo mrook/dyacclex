@@ -42,13 +42,18 @@
     
     Changes:
     
-    * Added support for '%union'
-    * Added readonly output to dlex/dyacc
-    * Added increased debugging output
-    * Numerous formatting and styling fixes
+    * Relicensed the following files under the LGPL:
+        - dlib.pas
+        - lexlib.pas
+        - yacclib.pas
+        
+      Note: this was done to eliminate any confusion regarding the use of 
+      generated parsers and the above support files in propietary software.
+      The files lexlib.pas and yacclib.pas were present in dyacclex's
+      predecessor, TPLY 4.1, without a license.
     
-    See the file 'ChangeLog' for a complete list of fixes.
-    
+    * Added PDF manual based on original TPLY 4.1 manual.
+       
     Compilation:
     
     Compiling DYACCLEX is pretty straightforward, you only need the 
@@ -85,4 +90,4 @@
     
     -------------------------------------------------------------------------
 
-    $Id: README,v 1.4 2004/08/17 20:19:38 druid Exp $  
+    $Id$  
