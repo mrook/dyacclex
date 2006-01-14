@@ -1244,8 +1244,8 @@ backward compatibility with older versions of (UNIX) Yacc:
 As with Delphi Lex, internal table sizes and the main memory available limit the
 complexity of source grammars that Delphi Yacc can handle. However, the maximum
 table sizes provided by Delphi Yacc are large enough to handle quite complex
-grammars (such as the Pascal grammar in the Delphi Yacc distribution). The actual
-table sizes are shown in the statistics printed by Delphi Yacc when a compilation
+grammars. The actual table sizes are shown in the statistics printed by Delphi 
+Yacc when a compilation
 is finished. The given figures are "s" (states), "i" (LR0 kernel items), "t"
 (shift and goto transitions) and "r" (reductions).
 
@@ -1321,7 +1321,7 @@ dlex [options] lex-file[.l] [output-file[.pas]]
 \subsection{Options}
 
 \begin{description}
-   \item[\t"-v"]
+   \item[\tt"-v"]
       ``Verbose:'' Lex generates a readable description of the generated
       lexical analyzer, written to lex-file with new extension \verb".lst".
    \item[\tt"-o"]
