@@ -357,8 +357,6 @@ end(*yynew*);
 
 procedure yyscan;
 begin
-  if length(yytext) = 255 then
-    fatal('yytext overflow');
   yyactchar := get_char;
   yytext    := yytext + yyactchar;
 end(*yyscan*);
