@@ -35,7 +35,7 @@
     
     The primary goal of the project is to clean up the code, and improve 
     compatibility and maintainability with modern versions and compilers 
-    of the Pascal language.
+    of the Pascal language (such as Delphi and Kylix).
     
     Changes:
     
